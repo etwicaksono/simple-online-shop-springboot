@@ -20,7 +20,7 @@ public class CreateCustomerRequest {
    private String phone;
 
    @NotNull(message = "{customer.validation.isActive.required}")
-   private Boolean isActive;
+   private Integer isActive;
 
    private MultipartFile pic;
 }

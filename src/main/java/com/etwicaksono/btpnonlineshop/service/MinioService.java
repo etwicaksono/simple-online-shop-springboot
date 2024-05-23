@@ -17,9 +17,11 @@ import io.minio.errors.ServerException;
 import io.minio.errors.XmlParserException;
 import io.minio.http.Method;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MinioService {
    private final MinioClient minioClient;
 
@@ -40,6 +42,7 @@ public class MinioService {
       try {
          return getLink(bucketName, objectName, 3600L);
       } catch (Exception e) {
+         log.error(e.getMessage());
          return null;
       }
    }
