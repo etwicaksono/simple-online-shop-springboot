@@ -19,4 +19,10 @@ public class GetListCustomerRequest {
 
    @NotNull(message = "{sortDirection.required}")
    private String sortDirection;
+
+   private String customerName;
+   private String customerAddress;
+   private String customerCode;
+   private String customerPhone;
+   private String isActive;
 }
