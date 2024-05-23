@@ -43,7 +43,7 @@ public class CustomerServiceImpl implements CustomerService {
    public ResponseEntity<WebResponse<Object>> createCustomer(CreateCustomerRequest body) {
       validator.validate(body);
       try {
-         String userPic = "";
+         String userPic = null;
          if (customerRepository.existsByCustomerCode(body.getCode())) {
             return ResponseUtil
                   .error400Response(
