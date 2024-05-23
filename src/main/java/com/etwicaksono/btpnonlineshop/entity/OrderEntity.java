@@ -1,5 +1,8 @@
 package com.etwicaksono.btpnonlineshop.entity;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
@@ -8,6 +11,7 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -33,23 +37,19 @@ public class OrderEntity {
    private String orderCode;
 
    @Column(name = "order_date")
-   private String orderDate;
+   private LocalDate orderDate;
 
    @Column(name = "total_price")
    private Integer totalPrice;
-
-   @Column(name = "customer_id")
-   private Integer customerId;
-
-   @Column(name = "items_id")
-   private Integer itemsId;
 
    @Column(name = "quantity")
    private Integer quantity;
 
    @ManyToOne
+   @JoinColumn(name = "customer_id")
    private CustomerEntity customer;
 
    @OneToMany
-   private ItemEntity items;
+   @JoinColumn(name = "items_id")
+   private List<ItemEntity> items;
 }

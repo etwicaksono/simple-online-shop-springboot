@@ -1,5 +1,7 @@
 package com.etwicaksono.btpnonlineshop.entity;
 
+import java.time.LocalDate;
+
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
@@ -39,11 +41,11 @@ public class CustomerEntity {
    @Column(name = "customer_phone", length = 32)
    private String customerPhone;
 
-   @Column(name = "is_active")
+   @Column(name = "is_active", columnDefinition = "int2")
    private Integer isActive;
 
    @Column(name = "last_order_date")
-   private String lastOrderDate;
+   private LocalDate lastOrderDate;
 
    @Column(name = "pic", length = 255)
    private String pic;

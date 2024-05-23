@@ -1,5 +1,7 @@
 package com.etwicaksono.btpnonlineshop.entity;
 
+import java.time.LocalDate;
+
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
@@ -39,10 +41,10 @@ public class ItemEntity {
    @Column(name = "price")
    private Integer price;
 
-   @Column(name = "is_available")
+   @Column(name = "is_available", columnDefinition = "int2")
    private Integer isAvailable;
 
    @Column(name = "last_re_stock")
-   private String lastRestock;
+   private LocalDate lastRestock;
 
 }
