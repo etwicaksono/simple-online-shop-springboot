@@ -1,5 +1,7 @@
 package com.etwicaksono.btpnonlineshop.service;
 
+import java.text.MessageFormat;
+import java.time.Instant;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,6 @@ import com.etwicaksono.btpnonlineshop.repository.CustomerRepository;
 import com.etwicaksono.btpnonlineshop.utils.ResponseUtil;
 
 import io.minio.ObjectWriteResponse;
-import io.minio.PutObjectArgs;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -39,7 +40,7 @@ public class CustomerServiceImpl implements CustomerService {
    private String bucketName;
 
    @Override
-   public ResponseEntity<WebResponse<Object>> createCustomer(CreateCustomerRequest body, MultipartFile userPicture) {
+   public ResponseEntity<WebResponse<Object>> createCustomer(CreateCustomerRequest body) {
       validator.validate(body);
       try {
          String userPic = "";
@@ -55,16 +56,20 @@ public class CustomerServiceImpl implements CustomerService {
                         messageSource.getMessage("customer.validation.phone.isExist", null, Locale.getDefault()));
          }
 
-         if (!userPicture.isEmpty()) {
-            MultipartFile file = userPicture;
+         if (!body.getPic().isEmpty()) {
+            MultipartFile file = body.getPic();
 
             // Get the original file name
             String fileName = file.getOriginalFilename();
 
             // Upload file to MinIO server
-            ObjectWriteResponse uploaded = minioService.upload(bucketName, fileName, file);
+            String uniqueId = String.valueOf(Instant.now().toEpochMilli());
+            ObjectWriteResponse uploaded = minioService.upload(
+                  bucketName,
+                  String.format("customer/%s-%s", uniqueId, fileName),
+                  file);
 
-            userPic = uploaded.etag();
+            userPic = uploaded.object();
          }
 
          CustomerEntity customer = CustomerEntity.builder()
@@ -79,7 +84,7 @@ public class CustomerServiceImpl implements CustomerService {
          customerRepository.save(customer);
 
          String messageTemplate = messageSource.getMessage("customer.created.success", null, Locale.getDefault());
-         String message = String.format(messageTemplate, body.getCode());
+         String message = MessageFormat.format(messageTemplate, body.getCode());
 
          return ResponseUtil.success201Response(message);
       } catch (Exception e) {

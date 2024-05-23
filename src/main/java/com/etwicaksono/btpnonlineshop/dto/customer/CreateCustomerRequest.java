@@ -3,9 +3,11 @@ package com.etwicaksono.btpnonlineshop.dto.customer;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class CreateCustomerRequest {
    @NotNull(message = "{customer.validation.name.required}")
    private String name;

@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/customer")
@@ -21,9 +20,23 @@ public class CustomerController {
    private CustomerService customerService;
 
    @PostMapping(value = "/create", consumes = { "multipart/form-data" })
-   public ResponseEntity<WebResponse<Object>> createCustomer(@RequestBody CreateCustomerRequest body,
+   public ResponseEntity<WebResponse<Object>> createCustomer(
+         @RequestParam("name") String name,
+         @RequestParam("address") String address,
+         @RequestParam("code") String code,
+         @RequestParam("phone") String phone,
+         @RequestParam("isActive") Integer isActive,
          @RequestParam("pic") MultipartFile userPic) {
-      return customerService.createCustomer(body, userPic);
+
+      CreateCustomerRequest body = CreateCustomerRequest.builder()
+            .name(name)
+            .address(address)
+            .code(code)
+            .phone(phone)
+            .isActive(isActive)
+            .pic(userPic)
+            .build();
+      return customerService.createCustomer(body);
    }
 
 }
