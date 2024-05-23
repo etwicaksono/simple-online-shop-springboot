@@ -6,9 +6,12 @@ import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
+import io.minio.ObjectWriteResponse;
+import io.minio.PutObjectArgs;
 import io.minio.errors.ErrorResponseException;
 import io.minio.errors.InsufficientDataException;
 import io.minio.errors.InternalException;
@@ -45,5 +48,17 @@ public class MinioService {
          log.error(e.getMessage());
          return null;
       }
+   }
+
+   public ObjectWriteResponse upload(String bucketName, String fileName, MultipartFile file)
+         throws ErrorResponseException, InsufficientDataException, InternalException, InvalidKeyException,
+         InvalidResponseException, IOException, NoSuchAlgorithmException, ServerException, XmlParserException {
+      return minioClient.putObject(
+            PutObjectArgs.builder()
+                  .bucket(bucketName)
+                  .object(fileName)
+                  .stream(file.getInputStream(), file.getSize(), -1)
+                  .contentType(file.getContentType())
+                  .build());
    }
 }

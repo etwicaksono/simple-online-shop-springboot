@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.etwicaksono.btpnonlineshop.dto.WebResponse;
 import com.etwicaksono.btpnonlineshop.dto.customer.CreateCustomerRequest;
@@ -15,6 +16,8 @@ import com.etwicaksono.btpnonlineshop.entity.CustomerEntity;
 import com.etwicaksono.btpnonlineshop.repository.CustomerRepository;
 import com.etwicaksono.btpnonlineshop.utils.ResponseUtil;
 
+import io.minio.ObjectWriteResponse;
+import io.minio.PutObjectArgs;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -36,9 +39,10 @@ public class CustomerServiceImpl implements CustomerService {
    private String bucketName;
 
    @Override
-   public ResponseEntity<WebResponse<Object>> createCustomer(CreateCustomerRequest body) {
+   public ResponseEntity<WebResponse<Object>> createCustomer(CreateCustomerRequest body, MultipartFile userPicture) {
       validator.validate(body);
       try {
+         String userPic = "";
          if (customerRepository.existsByCustomerCode(body.getCode())) {
             return ResponseUtil
                   .error400Response(
@@ -51,13 +55,25 @@ public class CustomerServiceImpl implements CustomerService {
                         messageSource.getMessage("customer.validation.phone.isExist", null, Locale.getDefault()));
          }
 
+         if (!userPicture.isEmpty()) {
+            MultipartFile file = userPicture;
+
+            // Get the original file name
+            String fileName = file.getOriginalFilename();
+
+            // Upload file to MinIO server
+            ObjectWriteResponse uploaded = minioService.upload(bucketName, fileName, file);
+
+            userPic = uploaded.etag();
+         }
+
          CustomerEntity customer = CustomerEntity.builder()
                .customerName(body.getName())
                .customerAddress(body.getAddress())
                .customerCode(body.getCode())
                .customerPhone(body.getPhone())
                .isActive(body.getIsActive())
-               // .pic(body.getPic())
+               .pic(userPic)
                .build();
 
          customerRepository.save(customer);
