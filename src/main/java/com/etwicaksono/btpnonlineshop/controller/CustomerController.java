@@ -29,7 +29,7 @@ public class CustomerController {
          @RequestParam("code") String code,
          @RequestParam("phone") String phone,
          @RequestParam("isActive") Integer isActive,
-         @RequestParam("pic") MultipartFile userPic) {
+         @RequestParam(value = "pic", required = false) MultipartFile userPic) {
 
       CreateCustomerRequest body = CreateCustomerRequest.builder()
             .name(name)
@@ -50,7 +50,7 @@ public class CustomerController {
          @RequestParam("code") String code,
          @RequestParam("phone") String phone,
          @RequestParam("isActive") Integer isActive,
-         @RequestParam("pic") MultipartFile userPic) {
+         @RequestParam(value = "pic", required = false) MultipartFile userPic) {
 
       UpdateCustomerRequest body = UpdateCustomerRequest.builder()
             .customerID(customerID)

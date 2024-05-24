@@ -59,7 +59,7 @@ public class CustomerServiceImpl implements CustomerService {
                         messageSource.getMessage("customer.validation.phone.isExist", null, Locale.getDefault()));
          }
 
-         if (!body.getPic().isEmpty()) {
+         if (body.getPic() != null && !body.getPic().isEmpty()) {
             MultipartFile file = body.getPic();
 
             // Get the original file name
@@ -112,19 +112,21 @@ public class CustomerServiceImpl implements CustomerService {
          userPic = existingCustomer.get().getPic();
          lastOrderDate = existingCustomer.get().getLastOrderDate();
 
-         if (customerRepository.existsByCustomerCode(body.getCode())) {
+         if (customerRepository.existsByCustomerCode(body.getCode())
+               && !customerID.equals(existingCustomer.get().getCustomerID())) {
             return ResponseUtil
                   .error400Response(
                         messageSource.getMessage("customer.validation.code.isExist", null, Locale.getDefault()));
          }
 
-         if (customerRepository.existsByCustomerPhone(body.getPhone())) {
+         if (customerRepository.existsByCustomerPhone(body.getPhone())
+               && !customerID.equals(existingCustomer.get().getCustomerID())) {
             return ResponseUtil
                   .error400Response(
                         messageSource.getMessage("customer.validation.phone.isExist", null, Locale.getDefault()));
          }
 
-         if (!body.getPic().isEmpty()) {
+         if (body.getPic() != null && !body.getPic().isEmpty()) {
             // delete old file
             if (!userPic.isEmpty()) {
                minioService.delete(bucketName, userPic);
