@@ -3,12 +3,14 @@ package com.etwicaksono.btpnonlineshop.dto.customer;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class UpdateCustomerRequest {
    @NotNull(message = "{customer.validation.customerID.required}")
-   private String customerID;
+   private Integer customerID;
 
    @NotNull(message = "{customer.validation.name.required}")
    private String name;
@@ -23,7 +25,7 @@ public class UpdateCustomerRequest {
    private String phone;
 
    @NotNull(message = "{customer.validation.isActive.required}")
-   private Boolean isActive;
+   private Integer isActive;
 
    private MultipartFile pic;
 }

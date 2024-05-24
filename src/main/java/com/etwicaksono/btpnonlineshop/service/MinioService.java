@@ -8,10 +8,13 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import io.minio.BucketExistsArgs;
 import io.minio.GetPresignedObjectUrlArgs;
+import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.ObjectWriteResponse;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
 import io.minio.errors.ErrorResponseException;
 import io.minio.errors.InsufficientDataException;
 import io.minio.errors.InternalException;
@@ -53,6 +56,13 @@ public class MinioService {
    public ObjectWriteResponse upload(String bucketName, String fileName, MultipartFile file)
          throws ErrorResponseException, InsufficientDataException, InternalException, InvalidKeyException,
          InvalidResponseException, IOException, NoSuchAlgorithmException, ServerException, XmlParserException {
+
+      boolean isBucketExist = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
+      if (!isBucketExist) {
+         minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+      }
+
+      // Upload file to MinIO server
       return minioClient.putObject(
             PutObjectArgs.builder()
                   .bucket(bucketName)
@@ -60,5 +70,13 @@ public class MinioService {
                   .stream(file.getInputStream(), file.getSize(), -1)
                   .contentType(file.getContentType())
                   .build());
+   }
+
+   // delete file from MinIO server
+   public void delete(String bucketName, String objectName)
+         throws ErrorResponseException, InsufficientDataException, InternalException, InvalidKeyException,
+         InvalidResponseException, IOException, NoSuchAlgorithmException, ServerException, XmlParserException {
+      RemoveObjectArgs target = RemoveObjectArgs.builder().bucket(bucketName).object(objectName).build();
+      minioClient.removeObject(target);
    }
 }
