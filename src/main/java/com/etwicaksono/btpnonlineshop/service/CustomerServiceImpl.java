@@ -180,8 +180,35 @@ public class CustomerServiceImpl implements CustomerService {
 
    @Override
    public ResponseEntity<WebResponse<Object>> findCustomer(Integer customerID) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findCustomer'");
+
+      try {
+         Optional<CustomerEntity> existingCustomer = customerRepository.findById(customerID);
+         if (!existingCustomer.isPresent()) {
+            return ResponseUtil
+                  .error400Response(
+                        messageSource.getMessage("customer.validation.customerID.invalid", null, Locale.getDefault()));
+         }
+
+         CustomerDto result = CustomerDto
+               .builder()
+               .customerID(customerID)
+               .name(existingCustomer.get().getCustomerName())
+               .address(existingCustomer.get().getCustomerAddress())
+               .code(existingCustomer.get().getCustomerCode())
+               .phone(existingCustomer.get().getCustomerPhone())
+               .isActive(existingCustomer.get().getIsActive())
+               .pic(minioService.generateMinioURL(bucketName, existingCustomer.get().getPic()))
+               .build();
+
+         String messageTemplate = messageSource.getMessage("customer.retrieved.success", null, Locale.getDefault());
+         String message = MessageFormat.format(messageTemplate, existingCustomer.get().getCustomerCode());
+
+         return ResponseUtil.success200Response(message, result);
+      } catch (Exception e) {
+         log.error(e.getMessage());
+         return ResponseUtil.error500Response(e.getMessage());
+      }
+
    }
 
    @Override
