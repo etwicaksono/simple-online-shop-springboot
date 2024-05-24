@@ -1,0 +1,33 @@
+spring.application.name=BTPN Online Shop
+spring.messages.basename=message
+spring.servlet.multipart.max-file-size: 20MB
+spring.servlet.multipart.max-request-size: 200MB
+logging.level.root=INFO
+
+# PostgreSQL
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.username=${SPRING_DATASOURCE_USERNAME}
+spring.datasource.password=${SPRING_DATASOURCE_PASSWORD}
+spring.datasource.url=${SPRING_DATASOURCE_URL}
+spring.datasource.type=com.zaxxer.hikari.HikariDataSource
+spring.datasource.hikari.minimum-idle=10
+spring.datasource.hikari.maximum-pool-size=50
+
+# Hibernate
+spring.jpa.properties.hibernate,dialect = org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.hibernate.ddl-auto = ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+spring.jpa.properties.hibernate.show_sql=true
+
+# JWT
+jwt.secret=jf493flofejsighu304u2j95348tghfwefjh348tysr0g39538
+jwt.expirationMs=86400000
+
+# minio
+minio.url=${MINIO_ENDPOINT}
+minio.username=${MINIO_ACCESS_KEY}
+minio.password=${MINIO_SECRET_KEY}
+minio.bucketName=btpn-online-shop
+
+# Server
+server.port=8080

@@ -7,6 +7,7 @@ WORKDIR /app
 # Copy the pom.xml and source code into the container
 COPY pom.xml .
 COPY src ./src
+COPY src/main/resources/application.properties.docker ./src/main/resources/application.properties
 
 # Build the application
 RUN mvn clean package -DskipTests
