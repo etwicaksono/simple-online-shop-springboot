@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.etwicaksono.btpnonlineshop.dto.WebResponse;
 import com.etwicaksono.btpnonlineshop.dto.customer.CreateCustomerRequest;
+import com.etwicaksono.btpnonlineshop.dto.customer.CustomerDto;
 import com.etwicaksono.btpnonlineshop.dto.customer.UpdateCustomerRequest;
 import com.etwicaksono.btpnonlineshop.entity.CustomerEntity;
 import com.etwicaksono.btpnonlineshop.repository.CustomerRepository;
@@ -156,10 +157,21 @@ public class CustomerServiceImpl implements CustomerService {
                userPic,
                customerID);
 
+         CustomerDto result = CustomerDto
+               .builder()
+               .customerID(customerID)
+               .name(body.getName())
+               .address(body.getAddress())
+               .code(body.getCode())
+               .phone(body.getPhone())
+               .isActive(body.getIsActive())
+               .pic(minioService.generateMinioURL(bucketName, userPic))
+               .build();
+
          String messageTemplate = messageSource.getMessage("customer.updated.success", null, Locale.getDefault());
          String message = MessageFormat.format(messageTemplate, body.getCode());
 
-         return ResponseUtil.success200Response(message, null);
+         return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
          log.error(e.getMessage());
          return ResponseUtil.error500Response(e.getMessage());
