@@ -86,10 +86,21 @@ public class CustomerServiceImpl implements CustomerService {
 
          customerRepository.save(customer);
 
+         CustomerDto result = CustomerDto
+               .builder()
+               .customerID(customer.getCustomerID())
+               .name(body.getName())
+               .address(body.getAddress())
+               .code(body.getCode())
+               .phone(body.getPhone())
+               .isActive(body.getIsActive())
+               .pic(minioService.generateMinioURL(bucketName, userPic))
+               .build();
+
          String messageTemplate = messageSource.getMessage("customer.created.success", null, Locale.getDefault());
          String message = MessageFormat.format(messageTemplate, body.getCode());
 
-         return ResponseUtil.success201Response(message);
+         return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
          log.error(e.getMessage());
          return ResponseUtil.error500Response(e.getMessage());
@@ -180,7 +191,6 @@ public class CustomerServiceImpl implements CustomerService {
 
    @Override
    public ResponseEntity<WebResponse<Object>> findCustomer(Integer customerID) {
-
       try {
          Optional<CustomerEntity> existingCustomer = customerRepository.findById(customerID);
          if (!existingCustomer.isPresent()) {
@@ -208,13 +218,33 @@ public class CustomerServiceImpl implements CustomerService {
          log.error(e.getMessage());
          return ResponseUtil.error500Response(e.getMessage());
       }
-
    }
 
    @Override
    public ResponseEntity<WebResponse<Object>> deleteCustomer(Integer customerID) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'deleteCustomer'");
+      try {
+         Optional<CustomerEntity> existingCustomer = customerRepository.findById(customerID);
+         if (!existingCustomer.isPresent()) {
+            return ResponseUtil
+                  .error400Response(
+                        messageSource.getMessage("customer.validation.customerID.invalid", null, Locale.getDefault()));
+         }
+
+         // delete file if exist
+         if (!existingCustomer.get().getPic().isEmpty()) {
+            minioService.delete(bucketName, existingCustomer.get().getPic());
+         }
+
+         customerRepository.deleteById(customerID);
+
+         String messageTemplate = messageSource.getMessage("customer.deleted.success", null, Locale.getDefault());
+         String message = MessageFormat.format(messageTemplate, existingCustomer.get().getCustomerCode());
+
+         return ResponseUtil.success200Response(message, null);
+      } catch (Exception e) {
+         log.error(e.getMessage());
+         return ResponseUtil.error500Response(e.getMessage());
+      }
    }
 
 }

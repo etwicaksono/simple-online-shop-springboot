@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,6 +69,11 @@ public class CustomerController {
    @GetMapping(value = "/detail/{customerID}")
    public ResponseEntity<WebResponse<Object>> findCustomer(@PathVariable("customerID") Integer customerID) {
       return customerService.findCustomer(customerID);
+   }
+
+   @DeleteMapping(value = "/delete/{customerID}")
+   public ResponseEntity<WebResponse<Object>> deleteCustomer(@PathVariable("customerID") Integer customerID) {
+      return customerService.deleteCustomer(customerID);
    }
 
 }
