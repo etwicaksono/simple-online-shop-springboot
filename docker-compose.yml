@@ -20,6 +20,8 @@ services:
             condition: service_healthy
          minio:
             condition: service_healthy
+      networks:
+         - btpn_network
 
    db:
       image: postgres
@@ -37,6 +39,8 @@ services:
          interval: 10s
          timeout: 5s
          retries: 5
+      networks:
+         - btpn_network
 
    minio:
       image: minio/minio
@@ -54,6 +58,8 @@ services:
          interval: 30s
          timeout: 10s
          retries: 3
+      networks:
+         - btpn_network
 
 volumes:
    pgdata:

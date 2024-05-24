@@ -46,6 +46,9 @@ public class MinioService {
 
    public String generateMinioURL(String bucketName, String objectName) {
       try {
+         if (objectName == null) {
+            return null;
+         }
          return getLink(bucketName, objectName, 3600L);
       } catch (Exception e) {
          log.error(e.getMessage());
@@ -57,8 +60,11 @@ public class MinioService {
          throws ErrorResponseException, InsufficientDataException, InternalException, InvalidKeyException,
          InvalidResponseException, IOException, NoSuchAlgorithmException, ServerException, XmlParserException {
 
+      log.info(String.format("Check is bucket %s exist", bucketName));
       boolean isBucketExist = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
+      log.info(String.format("Bucket %s exist: %s", bucketName, isBucketExist));
       if (!isBucketExist) {
+         log.info("Creating bucket: " + bucketName);
          minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
       }
 

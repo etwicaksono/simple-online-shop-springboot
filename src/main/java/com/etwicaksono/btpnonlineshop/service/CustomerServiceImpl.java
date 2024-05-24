@@ -76,6 +76,7 @@ public class CustomerServiceImpl implements CustomerService {
 
             // Upload file to MinIO server
             String uniqueId = String.valueOf(Instant.now().toEpochMilli());
+            log.info("Uploading image");
             ObjectWriteResponse uploaded = minioService.upload(
                   bucketName,
                   String.format("customer/%s-%s", uniqueId, fileName),
