@@ -14,6 +14,10 @@ import jakarta.transaction.Transactional;
 
 public interface CustomerRepository
       extends JpaRepository<CustomerEntity, Integer>, JpaSpecificationExecutor<CustomerEntity> {
+   boolean existsByCustomerCodeAndCustomerIDNot(String customerCode, Integer customerID);
+
+   boolean existsByCustomerPhoneAndCustomerIDNot(String customerPhone, Integer customerID);
+
    boolean existsByCustomerCode(String customerCode);
 
    boolean existsByCustomerPhone(String customerPhone);

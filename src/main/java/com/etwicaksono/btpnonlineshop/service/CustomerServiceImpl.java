@@ -52,24 +52,24 @@ public class CustomerServiceImpl implements CustomerService {
    private String bucketName;
 
    @Override
-   public ResponseEntity<WebResponse<Object>> createCustomer(CreateCustomerRequest body) {
-      validator.validate(body);
+   public ResponseEntity<WebResponse<Object>> createCustomer(CreateCustomerRequest request) {
+      validator.validate(request);
       try {
          String userPic = null;
-         if (customerRepository.existsByCustomerCode(body.getCode())) {
+         if (customerRepository.existsByCustomerCode(request.getCode())) {
             return ResponseUtil
                   .error400Response(
                         messageSource.getMessage("customer.validation.code.isExist", null, Locale.getDefault()));
          }
 
-         if (customerRepository.existsByCustomerPhone(body.getPhone())) {
+         if (customerRepository.existsByCustomerPhone(request.getPhone())) {
             return ResponseUtil
                   .error400Response(
                         messageSource.getMessage("customer.validation.phone.isExist", null, Locale.getDefault()));
          }
 
-         if (body.getPic() != null && !body.getPic().isEmpty()) {
-            MultipartFile file = body.getPic();
+         if (request.getPic() != null && !request.getPic().isEmpty()) {
+            MultipartFile file = request.getPic();
 
             // Get the original file name
             String fileName = file.getOriginalFilename();
@@ -85,11 +85,11 @@ public class CustomerServiceImpl implements CustomerService {
          }
 
          CustomerEntity customer = CustomerEntity.builder()
-               .customerName(body.getName())
-               .customerAddress(body.getAddress())
-               .customerCode(body.getCode())
-               .customerPhone(body.getPhone())
-               .isActive(body.getIsActive())
+               .customerName(request.getName())
+               .customerAddress(request.getAddress())
+               .customerCode(request.getCode())
+               .customerPhone(request.getPhone())
+               .isActive(request.getIsActive())
                .pic(userPic)
                .build();
 
@@ -98,16 +98,16 @@ public class CustomerServiceImpl implements CustomerService {
          CustomerDto result = CustomerDto
                .builder()
                .customerID(customer.getCustomerID())
-               .name(body.getName())
-               .address(body.getAddress())
-               .code(body.getCode())
-               .phone(body.getPhone())
-               .isActive(body.getIsActive())
+               .name(request.getName())
+               .address(request.getAddress())
+               .code(request.getCode())
+               .phone(request.getPhone())
+               .isActive(request.getIsActive())
                .pic(minioService.generateMinioURL(bucketName, userPic))
                .build();
 
          String messageTemplate = messageSource.getMessage("customer.created.success", null, Locale.getDefault());
-         String message = MessageFormat.format(messageTemplate, body.getCode());
+         String message = MessageFormat.format(messageTemplate, request.getCode());
 
          return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
@@ -117,12 +117,12 @@ public class CustomerServiceImpl implements CustomerService {
    }
 
    @Override
-   public ResponseEntity<WebResponse<Object>> updateCustomer(UpdateCustomerRequest body) {
-      validator.validate(body);
+   public ResponseEntity<WebResponse<Object>> updateCustomer(UpdateCustomerRequest request) {
+      validator.validate(request);
       try {
          String userPic = null;
          LocalDate lastOrderDate = null;
-         Integer customerID = body.getCustomerID();
+         Integer customerID = request.getCustomerID();
          Optional<CustomerEntity> existingCustomer = customerRepository.findById(customerID);
          if (!existingCustomer.isPresent()) {
             return ResponseUtil
@@ -132,27 +132,25 @@ public class CustomerServiceImpl implements CustomerService {
          userPic = existingCustomer.get().getPic();
          lastOrderDate = existingCustomer.get().getLastOrderDate();
 
-         if (customerRepository.existsByCustomerCode(body.getCode())
-               && !customerID.equals(existingCustomer.get().getCustomerID())) {
+         if (customerRepository.existsByCustomerCodeAndCustomerIDNot(request.getCode(), customerID)) {
             return ResponseUtil
                   .error400Response(
                         messageSource.getMessage("customer.validation.code.isExist", null, Locale.getDefault()));
          }
 
-         if (customerRepository.existsByCustomerPhone(body.getPhone())
-               && !customerID.equals(existingCustomer.get().getCustomerID())) {
+         if (customerRepository.existsByCustomerPhoneAndCustomerIDNot(request.getPhone(), customerID)) {
             return ResponseUtil
                   .error400Response(
                         messageSource.getMessage("customer.validation.phone.isExist", null, Locale.getDefault()));
          }
 
-         if (body.getPic() != null && !body.getPic().isEmpty()) {
+         if (request.getPic() != null && !request.getPic().isEmpty()) {
             // delete old file
-            if (!userPic.isEmpty()) {
+            if (userPic != null && !userPic.isEmpty()) {
                minioService.delete(bucketName, userPic);
             }
 
-            MultipartFile file = body.getPic();
+            MultipartFile file = request.getPic();
 
             // Get the original file name
             String fileName = file.getOriginalFilename();
@@ -168,11 +166,11 @@ public class CustomerServiceImpl implements CustomerService {
          }
 
          customerRepository.updateCustomer(
-               body.getName(),
-               body.getAddress(),
-               body.getCode(),
-               body.getPhone(),
-               body.getIsActive(),
+               request.getName(),
+               request.getAddress(),
+               request.getCode(),
+               request.getPhone(),
+               request.getIsActive(),
                lastOrderDate,
                userPic,
                customerID);
@@ -180,16 +178,16 @@ public class CustomerServiceImpl implements CustomerService {
          CustomerDto result = CustomerDto
                .builder()
                .customerID(customerID)
-               .name(body.getName())
-               .address(body.getAddress())
-               .code(body.getCode())
-               .phone(body.getPhone())
-               .isActive(body.getIsActive())
+               .name(request.getName())
+               .address(request.getAddress())
+               .code(request.getCode())
+               .phone(request.getPhone())
+               .isActive(request.getIsActive())
                .pic(minioService.generateMinioURL(bucketName, userPic))
                .build();
 
          String messageTemplate = messageSource.getMessage("customer.updated.success", null, Locale.getDefault());
-         String message = MessageFormat.format(messageTemplate, body.getCode());
+         String message = MessageFormat.format(messageTemplate, request.getCode());
 
          return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
@@ -240,7 +238,7 @@ public class CustomerServiceImpl implements CustomerService {
          }
 
          // delete file if exist
-         if (!existingCustomer.get().getPic().isEmpty()) {
+         if (existingCustomer.get().getPic() != null && !existingCustomer.get().getPic().isEmpty()) {
             minioService.delete(bucketName, existingCustomer.get().getPic());
          }
 
@@ -265,12 +263,9 @@ public class CustomerServiceImpl implements CustomerService {
          List<CustomerDto> customers = new ArrayList<>();
          Sort.Direction sortDirection = request.getSortDirection()
                .equalsIgnoreCase("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC;
-         log.info("Before spec");
          CustomerSpecification customerSpecification = new CustomerSpecification(request);
-         log.info("After spec");
-         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortDirection, "customer_id"));
+         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortDirection, "customerID"));
          Page<CustomerEntity> customerPage = customerRepository.findAll(customerSpecification, pageable);
-         log.info("After page");
          for (CustomerEntity customer : customerPage) {
             customers.add(CustomerDto
                   .builder()

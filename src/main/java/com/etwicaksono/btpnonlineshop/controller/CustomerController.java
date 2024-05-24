@@ -34,7 +34,7 @@ public class CustomerController {
          @RequestParam("isActive") Integer isActive,
          @RequestParam(value = "pic", required = false) MultipartFile userPic) {
 
-      CreateCustomerRequest body = CreateCustomerRequest.builder()
+      CreateCustomerRequest request = CreateCustomerRequest.builder()
             .name(name)
             .address(address)
             .code(code)
@@ -42,7 +42,7 @@ public class CustomerController {
             .isActive(isActive)
             .pic(userPic)
             .build();
-      return customerService.createCustomer(body);
+      return customerService.createCustomer(request);
    }
 
    @PutMapping(value = "/update/{customerID}", consumes = { "multipart/form-data" })
@@ -55,7 +55,7 @@ public class CustomerController {
          @RequestParam("isActive") Integer isActive,
          @RequestParam(value = "pic", required = false) MultipartFile userPic) {
 
-      UpdateCustomerRequest body = UpdateCustomerRequest.builder()
+      UpdateCustomerRequest request = UpdateCustomerRequest.builder()
             .customerID(customerID)
             .name(name)
             .address(address)
@@ -64,7 +64,7 @@ public class CustomerController {
             .isActive(isActive)
             .pic(userPic)
             .build();
-      return customerService.updateCustomer(body);
+      return customerService.updateCustomer(request);
    }
 
    @GetMapping(value = "/detail/{customerID}")

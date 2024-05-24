@@ -8,9 +8,9 @@ import com.etwicaksono.btpnonlineshop.dto.customer.GetListCustomerRequest;
 import com.etwicaksono.btpnonlineshop.dto.customer.UpdateCustomerRequest;
 
 public interface CustomerService {
-   ResponseEntity<WebResponse<Object>> createCustomer(CreateCustomerRequest body);
+   ResponseEntity<WebResponse<Object>> createCustomer(CreateCustomerRequest request);
 
-   ResponseEntity<WebResponse<Object>> updateCustomer(UpdateCustomerRequest body);
+   ResponseEntity<WebResponse<Object>> updateCustomer(UpdateCustomerRequest request);
 
    ResponseEntity<WebResponse<Object>> findCustomer(Integer customerID);
 
