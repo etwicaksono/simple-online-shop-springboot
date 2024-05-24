@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.etwicaksono.btpnonlineshop.dto.WebResponse;
 import com.etwicaksono.btpnonlineshop.dto.customer.CreateCustomerRequest;
+import com.etwicaksono.btpnonlineshop.dto.customer.GetListCustomerRequest;
 import com.etwicaksono.btpnonlineshop.dto.customer.UpdateCustomerRequest;
 import com.etwicaksono.btpnonlineshop.service.CustomerService;
 
@@ -74,6 +75,29 @@ public class CustomerController {
    @DeleteMapping(value = "/delete/{customerID}")
    public ResponseEntity<WebResponse<Object>> deleteCustomer(@PathVariable("customerID") Integer customerID) {
       return customerService.deleteCustomer(customerID);
+   }
+
+   @GetMapping(value = "/list")
+   public ResponseEntity<WebResponse<Object>> listCustomer(
+         @RequestParam("pageNumber") String pageNumber,
+         @RequestParam("pageSize") String pageSize,
+         @RequestParam("sortDirection") String sortDirection,
+         @RequestParam(value = "customerName", required = false) String customerName,
+         @RequestParam(value = "customerAddress", required = false) String customerAddress,
+         @RequestParam(value = "customerCode", required = false) String customerCode,
+         @RequestParam(value = "customerPhone", required = false) String customerPhone,
+         @RequestParam(value = "isActive", required = false) String isActive) {
+
+      return customerService.getCustomer(GetListCustomerRequest.builder()
+            .pageNumber(pageNumber)
+            .pageSize(pageSize)
+            .sortDirection(sortDirection)
+            .customerName(customerName)
+            .customerAddress(customerAddress)
+            .customerCode(customerCode)
+            .customerPhone(customerPhone)
+            .isActive(isActive)
+            .build());
    }
 
 }

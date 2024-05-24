@@ -3,22 +3,31 @@ package com.etwicaksono.btpnonlineshop.service;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.etwicaksono.btpnonlineshop.dto.Pagination;
 import com.etwicaksono.btpnonlineshop.dto.WebResponse;
 import com.etwicaksono.btpnonlineshop.dto.customer.CreateCustomerRequest;
 import com.etwicaksono.btpnonlineshop.dto.customer.CustomerDto;
+import com.etwicaksono.btpnonlineshop.dto.customer.GetListCustomerRequest;
 import com.etwicaksono.btpnonlineshop.dto.customer.UpdateCustomerRequest;
 import com.etwicaksono.btpnonlineshop.entity.CustomerEntity;
 import com.etwicaksono.btpnonlineshop.repository.CustomerRepository;
+import com.etwicaksono.btpnonlineshop.service.specification.CustomerSpecification;
 import com.etwicaksono.btpnonlineshop.utils.ResponseUtil;
 
 import io.minio.ObjectWriteResponse;
@@ -241,6 +250,49 @@ public class CustomerServiceImpl implements CustomerService {
          String message = MessageFormat.format(messageTemplate, existingCustomer.get().getCustomerCode());
 
          return ResponseUtil.success200Response(message, null);
+      } catch (Exception e) {
+         log.error(e.getMessage());
+         return ResponseUtil.error500Response(e.getMessage());
+      }
+   }
+
+   @Override
+   public ResponseEntity<WebResponse<Object>> getCustomer(GetListCustomerRequest request) {
+      validator.validate(request);
+      try {
+         int pageNumber = Integer.parseInt(request.getPageNumber());
+         int pageSize = Integer.parseInt(request.getPageSize());
+         List<CustomerDto> customers = new ArrayList<>();
+         Sort.Direction sortDirection = request.getSortDirection()
+               .equalsIgnoreCase("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC;
+         log.info("Before spec");
+         CustomerSpecification customerSpecification = new CustomerSpecification(request);
+         log.info("After spec");
+         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortDirection, "customer_id"));
+         Page<CustomerEntity> customerPage = customerRepository.findAll(customerSpecification, pageable);
+         log.info("After page");
+         for (CustomerEntity customer : customerPage) {
+            customers.add(CustomerDto
+                  .builder()
+                  .customerID(customer.getCustomerID())
+                  .name(customer.getCustomerName())
+                  .address(customer.getCustomerAddress())
+                  .code(customer.getCustomerCode())
+                  .phone(customer.getCustomerPhone())
+                  .isActive(customer.getIsActive())
+                  .pic(minioService.generateMinioURL(bucketName, customer.getPic()))
+                  .build());
+         }
+
+         Pagination<List<CustomerDto>> result = Pagination
+               .<List<CustomerDto>>builder()
+               .data(customers)
+               .totalPage(customerPage.getTotalPages())
+               .totalItems(customerPage.getTotalElements())
+               .build();
+
+         String message = messageSource.getMessage("customers.retrieved.success", null, Locale.getDefault());
+         return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
          log.error(e.getMessage());
          return ResponseUtil.error500Response(e.getMessage());

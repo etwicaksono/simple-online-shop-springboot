@@ -16,12 +16,13 @@ import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomerSpecification implements Specification<CustomerEntity> {
-
    private GetListCustomerRequest request;
 
    @Override
@@ -35,7 +36,7 @@ public class CustomerSpecification implements Specification<CustomerEntity> {
       String customerCode = request.getCustomerCode();
       String customerPhone = request.getCustomerPhone();
       boolean isActive = request.getIsActive() != null &&
-            request.getIsActive() != "" &&
+            !request.getIsActive().equals("") &&
             Integer.parseInt(request.getIsActive()) != 0;
 
       if (customerName != null && !customerName.isEmpty()) {
