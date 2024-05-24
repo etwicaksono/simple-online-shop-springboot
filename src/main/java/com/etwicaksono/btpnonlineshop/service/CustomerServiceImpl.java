@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.etwicaksono.btpnonlineshop.dto.WebResponse;
 import com.etwicaksono.btpnonlineshop.dto.customer.CreateCustomerRequest;
-import com.etwicaksono.btpnonlineshop.dto.customer.UpdateCustomerDTO;
 import com.etwicaksono.btpnonlineshop.dto.customer.UpdateCustomerRequest;
 import com.etwicaksono.btpnonlineshop.entity.CustomerEntity;
 import com.etwicaksono.btpnonlineshop.repository.CustomerRepository;
@@ -147,17 +146,15 @@ public class CustomerServiceImpl implements CustomerService {
             userPic = uploaded.object();
          }
 
-         UpdateCustomerDTO updateCustomerDTO = UpdateCustomerDTO.builder()
-               .customerName(body.getName())
-               .customerAddress(body.getAddress())
-               .customerCode(body.getCode())
-               .customerPhone(body.getPhone())
-               .isActive(body.getIsActive())
-               .lastOrderDate(lastOrderDate)
-               .pic(userPic)
-               .customerID(customerID)
-               .build();
-         customerRepository.updateCustomer(updateCustomerDTO);
+         customerRepository.updateCustomer(
+               body.getName(),
+               body.getAddress(),
+               body.getCode(),
+               body.getPhone(),
+               body.getIsActive(),
+               lastOrderDate,
+               userPic,
+               customerID);
 
          String messageTemplate = messageSource.getMessage("customer.updated.success", null, Locale.getDefault());
          String message = MessageFormat.format(messageTemplate, body.getCode());
