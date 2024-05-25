@@ -1,13 +1,16 @@
 package com.etwicaksono.btpnonlineshop.controller;
 
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 public class RootController {
-   @RequestMapping("/")
-   public String rootHanlder() {
-      return "Welcome to BTPN Online Shop API";
+   @GetMapping("/")
+   public ModelAndView rootHandler() {
+      ModelAndView modelAndView = new ModelAndView();
+      modelAndView.setViewName("welcome");
+      return modelAndView;
    }
 
 }
