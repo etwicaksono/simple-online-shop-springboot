@@ -31,3 +31,7 @@ minio.bucketName=btpn-online-shop
 
 # Server
 server.port=8080
+
+# Swagger
+springdoc.api-docs.path=/api-docs
+springdoc.swagger-ui.path=/docs
