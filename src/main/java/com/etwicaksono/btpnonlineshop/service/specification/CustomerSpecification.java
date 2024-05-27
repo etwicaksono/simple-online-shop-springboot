@@ -38,22 +38,26 @@ public class CustomerSpecification implements Specification<CustomerEntity> {
             Integer.parseInt(request.getIsActive()) != 0;
 
       if (customerName != null && !customerName.isEmpty()) {
-         Predicate customerNameFilter = criteriaBuilder.equal(root.get("customerName"), customerName);
+         Predicate customerNameFilter = criteriaBuilder.like(root.get("customerName"),
+               String.format("%%%s%%", customerName));
          predicates.add(customerNameFilter);
       }
 
       if (customerAddress != null && !customerAddress.isEmpty()) {
-         Predicate customerAddressFilter = criteriaBuilder.equal(root.get("customerAddress"), customerAddress);
+         Predicate customerAddressFilter = criteriaBuilder.like(root.get("customerAddress"),
+               String.format("%%%s%%", customerAddress));
          predicates.add(customerAddressFilter);
       }
 
       if (customerCode != null && !customerCode.isEmpty()) {
-         Predicate customerCodeFilter = criteriaBuilder.equal(root.get("customerCode"), customerCode);
+         Predicate customerCodeFilter = criteriaBuilder.like(root.get("customerCode"),
+               String.format("%%%s%%", customerCode));
          predicates.add(customerCodeFilter);
       }
 
       if (customerPhone != null && !customerPhone.isEmpty()) {
-         Predicate customerPhoneFilter = criteriaBuilder.equal(root.get("customerPhone"), customerPhone);
+         Predicate customerPhoneFilter = criteriaBuilder.like(root.get("customerPhone"),
+               String.format("%%%s%%", customerPhone));
          predicates.add(customerPhoneFilter);
       }
 
