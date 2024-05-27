@@ -105,6 +105,7 @@ public class CustomerServiceImpl implements CustomerService {
                .phone(request.getPhone())
                .isActive(request.getIsActive())
                .pic(minioService.generateMinioURL(bucketName, userPic))
+               .lastOrderDate(customer.getLastOrderDate())
                .build();
 
          String messageTemplate = messageSource.getMessage("customer.created.success", null, Locale.getDefault());
@@ -143,6 +144,10 @@ public class CustomerServiceImpl implements CustomerService {
             return ResponseUtil
                   .error400Response(
                         messageSource.getMessage("customer.validation.phone.isExist", null, Locale.getDefault()));
+         }
+
+         if (request.getLastOrderDate() != null) {
+            lastOrderDate = request.getLastOrderDate();
          }
 
          if (request.getPic() != null && !request.getPic().isEmpty()) {
@@ -185,6 +190,7 @@ public class CustomerServiceImpl implements CustomerService {
                .phone(request.getPhone())
                .isActive(request.getIsActive())
                .pic(minioService.generateMinioURL(bucketName, userPic))
+               .lastOrderDate(lastOrderDate)
                .build();
 
          String messageTemplate = messageSource.getMessage("customer.updated.success", null, Locale.getDefault());
@@ -216,6 +222,7 @@ public class CustomerServiceImpl implements CustomerService {
                .phone(existingCustomer.get().getCustomerPhone())
                .isActive(existingCustomer.get().getIsActive())
                .pic(minioService.generateMinioURL(bucketName, existingCustomer.get().getPic()))
+               .lastOrderDate(existingCustomer.get().getLastOrderDate())
                .build();
 
          String messageTemplate = messageSource.getMessage("customer.retrieved.success", null, Locale.getDefault());
@@ -277,6 +284,7 @@ public class CustomerServiceImpl implements CustomerService {
                   .phone(customer.getCustomerPhone())
                   .isActive(customer.getIsActive())
                   .pic(minioService.generateMinioURL(bucketName, customer.getPic()))
+                  .lastOrderDate(customer.getLastOrderDate())
                   .build());
          }
 

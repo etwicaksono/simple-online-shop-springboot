@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -26,6 +27,8 @@ public class UpdateCustomerRequest {
 
    @NotNull(message = "{customer.validation.isActive.required}")
    private Integer isActive;
+
+   private LocalDate lastOrderDate;
 
    private MultipartFile pic;
 }
