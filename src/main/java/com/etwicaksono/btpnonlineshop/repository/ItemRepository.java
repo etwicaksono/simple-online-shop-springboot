@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import com.etwicaksono.btpnonlineshop.entity.ItemEntity;
 
 public interface ItemRepository extends JpaRepository<ItemEntity, Integer>, JpaSpecificationExecutor<ItemEntity> {
+   boolean existsByItemsCodeAndItemsIDNot(String itemsCode, Integer itemsID);
 
+   boolean existsByItemsCode(String itemsCode);
 }
