@@ -172,6 +172,19 @@ public class CustomerController {
       return customerService.deleteCustomer(customerID);
    }
 
+   /**
+    * List Customers - Get list of customers
+    *
+    * @param pageNumber      PageNumber of customers list (required)
+    * @param pageSize        PageSize of customers list (required)
+    * @param sortDirection   Sort direction of customers list (required)
+    * @param customerName    Customer name filter of customers list (optional)
+    * @param customerAddress Customer address filter of customers list (optional)
+    * @param customerCode    Customer code filter of customers list (optional)
+    * @param customerPhone   Customer phone filter of customers list (optional)
+    * @param isActive        Is active status filter of customers list (optional)
+    * @return ResponseEntity containing WebResponse of Object
+    */
    @Operation(summary = "List Customers", description = "Get list of customers")
    @ApiResponses({
          @ApiResponse(responseCode = "200", content = {
