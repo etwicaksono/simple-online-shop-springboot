@@ -1,8 +1,8 @@
 package com.etwicaksono.btpnonlineshop.service;
 
 import java.text.MessageFormat;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -40,8 +40,12 @@ public class OrderServiceImpl implements OrderService {
    @Autowired
    private MessageSource messageSource;
 
+   @Autowired
+   private ValidationService validator;
+
    @Override
    public ResponseEntity<WebResponse<Object>> createOrder(CreateOrderRequest request) {
+      validator.validate(request);
       try {
          String orderCode = "";
          Integer totalPrice = 0;
@@ -60,6 +64,8 @@ public class OrderServiceImpl implements OrderService {
 
          CustomerEntity customer = customerRepository.findById(request.getCustomerID()).get();
          ItemEntity item = itemRepository.findById(request.getItemsID()).get();
+         totalPrice = item.getPrice() * request.getQuantity();
+         orderCode = String.format("%s-%s", customer.getCustomerCode(), Instant.now().toEpochMilli());
 
          OrderEntity order = OrderEntity.builder()
                .orderCode(orderCode)
@@ -74,7 +80,7 @@ public class OrderServiceImpl implements OrderService {
 
          OrderDto result = OrderDto
                .builder()
-               .orderId(order.getOrderId())
+               .orderId(order.getOrderID())
                .orderCode(order.getOrderCode())
                .orderDate(order.getOrderDate())
                .totalPrice(order.getTotalPrice())
@@ -95,8 +101,54 @@ public class OrderServiceImpl implements OrderService {
 
    @Override
    public ResponseEntity<WebResponse<Object>> updateOrder(UpdateOrderRequest request) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'updateOrder'");
+      validator.validate(request);
+      try {
+         String orderCode = "";
+         Integer totalPrice = 0;
+
+         if (!orderRepository.existsById(request.getOrderID())) {
+            return ResponseUtil.error400Response(Constants.getMessage(messageSource, Constants.ORDER_ID_INVALID));
+         }
+
+         if (!customerRepository.existsById(request.getCustomerID())) {
+            return ResponseUtil.error400Response(Constants.getMessage(messageSource, Constants.CUSTOMER_ID_INVALID));
+         }
+
+         if (!itemRepository.existsById(request.getItemsID())) {
+            return ResponseUtil.error400Response(Constants.getMessage(messageSource, Constants.ITEMS_ID_INVALID));
+         }
+         if (request.getQuantity() <= 0) {
+            return ResponseUtil.error400Response(Constants.getMessage(messageSource, Constants.QUANTITY_INVALID));
+         }
+
+         CustomerEntity customer = customerRepository.findById(request.getCustomerID()).get();
+         ItemEntity item = itemRepository.findById(request.getItemsID()).get();
+         OrderEntity order = orderRepository.findById(request.getOrderID()).get();
+         totalPrice = item.getPrice() * request.getQuantity();
+         orderCode = order.getOrderCode();
+
+         orderRepository.updateOrder(orderCode, order.getOrderDate(), totalPrice, customer.getCustomerID(),
+               request.getItemsID(), request.getQuantity(), order.getOrderID());
+
+         OrderDto result = OrderDto
+               .builder()
+               .orderId(order.getOrderID())
+               .orderCode(order.getOrderCode())
+               .orderDate(order.getOrderDate())
+               .totalPrice(totalPrice)
+               .quantity(request.getQuantity())
+               .customer(customer)
+               .item(item)
+               .build();
+
+         String message = MessageFormat.format(Constants.getMessage(messageSource, Constants.ORDER_UPDATED_SUCCESS),
+               order.getOrderCode());
+
+         return ResponseUtil.success200Response(message, result);
+      } catch (Exception e) {
+         log.error(e.getMessage());
+         return ResponseUtil.error500Response(e.getMessage());
+      }
    }
 
    @Override

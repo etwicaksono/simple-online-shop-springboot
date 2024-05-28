@@ -57,11 +57,11 @@ public class ItemController {
    })
    @PostMapping(value = "/create")
    public ResponseEntity<WebResponse<Object>> createItem(
-         @Parameter(name = "name", description = "Name of item", required = true) @RequestParam("name") String name,
-         @Parameter(name = "code", description = "Code of item", required = true) @RequestParam("code") String code,
-         @Parameter(name = "stock", description = "Stock number of item", required = true) @RequestParam("stock") Integer stock,
-         @Parameter(name = "price", description = "Price of item", required = true) @RequestParam("price") Integer price,
-         @Parameter(name = "isAvailable", description = "Is available status of item", required = true) @RequestParam("isAvailable") Integer isAvailable) {
+         @Parameter(name = "name", description = "Name of the item", required = true) @RequestParam("name") String name,
+         @Parameter(name = "code", description = "Code of the item", required = true) @RequestParam("code") String code,
+         @Parameter(name = "stock", description = "Stock number of the item", required = true) @RequestParam("stock") Integer stock,
+         @Parameter(name = "price", description = "Price of the item", required = true) @RequestParam("price") Integer price,
+         @Parameter(name = "isAvailable", description = "Is available status of the item", required = true) @RequestParam("isAvailable") Integer isAvailable) {
       CreateItemRequest request = CreateItemRequest.builder()
             .name(name)
             .code(code)
@@ -97,12 +97,12 @@ public class ItemController {
    })
    @PutMapping(value = "/update/{itemID}")
    public ResponseEntity<WebResponse<Object>> updateCustomer(
-         @Parameter(name = "itemID", description = "Item ID of item", required = true) @PathVariable("itemID") Integer itemID,
-         @Parameter(name = "name", description = "Name of item", required = true) @RequestParam("name") String name,
-         @Parameter(name = "code", description = "Code of item", required = true) @RequestParam("code") String code,
-         @Parameter(name = "stock", description = "Stock of item", required = true) @RequestParam("stock") Integer stock,
-         @Parameter(name = "price", description = "Price of item", required = true) @RequestParam("price") Integer price,
-         @Parameter(name = "isAvailable", description = "IsAvailable of item", required = true) @RequestParam("isAvailable") Integer isAvailable) {
+         @Parameter(name = "itemID", description = "the ID of the item to be updated", required = true) @PathVariable("itemID") Integer itemID,
+         @Parameter(name = "name", description = "the new name of the item", required = true) @RequestParam("name") String name,
+         @Parameter(name = "code", description = "the new code of the item", required = true) @RequestParam("code") String code,
+         @Parameter(name = "stock", description = "the new stock of the item", required = true) @RequestParam("stock") Integer stock,
+         @Parameter(name = "price", description = "the new price of the item", required = true) @RequestParam("price") Integer price,
+         @Parameter(name = "isAvailable", description = "the new availability status of the item", required = true) @RequestParam("isAvailable") Integer isAvailable) {
 
       UpdateItemRequest request = UpdateItemRequest.builder()
             .itemsID(itemID)
@@ -136,7 +136,7 @@ public class ItemController {
    })
    @GetMapping(value = "/detail/{itemID}")
    public ResponseEntity<WebResponse<Object>> findCustomer(
-         @Parameter(name = "itemID", description = "Item ID of item", required = true) @PathVariable("itemID") Integer itemID) {
+         @Parameter(name = "itemID", description = "the ID of the item to be retrieved", required = true) @PathVariable("itemID") Integer itemID) {
       return itemService.findItem(itemID);
    }
 
@@ -161,7 +161,7 @@ public class ItemController {
    })
    @DeleteMapping(value = "/delete/{itemID}")
    public ResponseEntity<WebResponse<Object>> deleteCustomer(
-         @Parameter(name = "itemID", description = "Item ID of item", required = true) @PathVariable("itemID") Integer itemID) {
+         @Parameter(name = "itemID", description = "the ID of the item to be deleted", required = true) @PathVariable("itemID") Integer itemID) {
       return itemService.deleteItem(itemID);
    }
 
@@ -194,9 +194,9 @@ public class ItemController {
          @Parameter(name = "pageNumber", description = "PageNumber of items list", required = true) @RequestParam("pageNumber") String pageNumber,
          @Parameter(name = "pageSize", description = "PageSize of items list", required = true) @RequestParam("pageSize") String pageSize,
          @Parameter(name = "sortDirection", description = "Sort direction of items list", required = true) @RequestParam("sortDirection") String sortDirection,
-         @Parameter(name = "itemName", description = "itemName filter of items list", required = false) @RequestParam(value = "itemName", required = false) String itemName,
-         @Parameter(name = "itemCode", description = "itemCode filter of items list", required = false) @RequestParam(value = "itemCode", required = false) String itemCode,
-         @Parameter(name = "isAvailable", description = "isAvailable filter of items list", required = false) @RequestParam(value = "isAvailable", required = false) String isAvailable) {
+         @Parameter(name = "itemName", description = "itemName filter of items list (optional)", required = false) @RequestParam(value = "itemName", required = false) String itemName,
+         @Parameter(name = "itemCode", description = "itemCode filter of items list (optional)", required = false) @RequestParam(value = "itemCode", required = false) String itemCode,
+         @Parameter(name = "isAvailable", description = "isAvailable filter of items list (optional)", required = false) @RequestParam(value = "isAvailable", required = false) String isAvailable) {
 
       return itemService.getItem(GetListItemRequest.builder()
             .pageNumber(pageNumber)

@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 public class UpdateOrderRequest {
-   @NotNull(message = "{order.orderID.required}")
+   @NotNull(message = "{orderID.required}")
    private Integer orderID;
 
    @NotNull(message = "{customerID.required}")
