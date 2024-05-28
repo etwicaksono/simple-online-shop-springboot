@@ -12,16 +12,14 @@ import java.text.MessageFormat;
 
 import com.etwicaksono.btpnonlineshop.dto.Pagination;
 import com.etwicaksono.btpnonlineshop.dto.WebResponse;
-import com.etwicaksono.btpnonlineshop.dto.customer.CustomerDto;
 import com.etwicaksono.btpnonlineshop.dto.item.CreateItemRequest;
 import com.etwicaksono.btpnonlineshop.dto.item.GetListItemRequest;
 import com.etwicaksono.btpnonlineshop.dto.item.ItemDto;
 import com.etwicaksono.btpnonlineshop.dto.item.UpdateItemRequest;
-import com.etwicaksono.btpnonlineshop.entity.CustomerEntity;
 import com.etwicaksono.btpnonlineshop.entity.ItemEntity;
 import com.etwicaksono.btpnonlineshop.repository.ItemRepository;
-import com.etwicaksono.btpnonlineshop.service.specification.CustomerSpecification;
 import com.etwicaksono.btpnonlineshop.service.specification.ItemSpecification;
+import com.etwicaksono.btpnonlineshop.utils.Constants;
 import com.etwicaksono.btpnonlineshop.utils.ResponseUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -40,9 +38,6 @@ public class ItemServiceImpl implements ItemService {
    private ItemRepository itemRepository;
 
    @Autowired
-   private MessageSource messageSource;
-
-   @Autowired
    private ValidationService validator;
 
    @Override
@@ -50,9 +45,7 @@ public class ItemServiceImpl implements ItemService {
       validator.validate(request);
       try {
          if (itemRepository.existsByItemsCode(request.getCode())) {
-            return ResponseUtil
-                  .error400Response(
-                        messageSource.getMessage("item.validation.code.isExist", null, Locale.getDefault()));
+            return ResponseUtil.error400Response(Constants.ITEM_VALIDATION_CODE_IS_EXIST);
          }
 
          ItemEntity item = ItemEntity.builder()
@@ -76,8 +69,7 @@ public class ItemServiceImpl implements ItemService {
                .lastReStock(item.getLastRestock())
                .build();
 
-         String messageTemplate = messageSource.getMessage("item.created.success", null, Locale.getDefault());
-         String message = MessageFormat.format(messageTemplate, request.getCode());
+         String message = MessageFormat.format(Constants.ITEM_CREATED_SUCCESS, request.getCode());
 
          return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
@@ -94,15 +86,12 @@ public class ItemServiceImpl implements ItemService {
          Integer itemsID = request.getItemsID();
          Optional<ItemEntity> existingItem = itemRepository.findById(itemsID);
          if (!existingItem.isPresent()) {
-            return ResponseUtil.error400Response(
-                  messageSource.getMessage("item.validation.itemsID.invalid", null, Locale.getDefault()));
+            return ResponseUtil.error400Response(Constants.ITEM_VALIDATION_ITEMS_ID_INVALID);
          }
          lastReStock = existingItem.get().getLastRestock();
 
          if (itemRepository.existsByItemsCodeAndItemsIDNot(request.getCode(), itemsID)) {
-            return ResponseUtil
-                  .error400Response(
-                        messageSource.getMessage("item.validation.code.isExist", null, Locale.getDefault()));
+            return ResponseUtil.error400Response(Constants.ITEM_VALIDATION_CODE_IS_EXIST);
          }
 
          if (request.getLastReStock() != null) {
@@ -123,8 +112,7 @@ public class ItemServiceImpl implements ItemService {
                .lastReStock(lastReStock)
                .build();
 
-         String messageTemplate = messageSource.getMessage("item.updated.success", null, Locale.getDefault());
-         String message = MessageFormat.format(messageTemplate, request.getCode());
+         String message = MessageFormat.format(Constants.ITEM_UPDATED_SUCCESS, request.getCode());
 
          return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
@@ -138,9 +126,7 @@ public class ItemServiceImpl implements ItemService {
       try {
          Optional<ItemEntity> existingItem = itemRepository.findById(itemID);
          if (!existingItem.isPresent()) {
-            return ResponseUtil
-                  .error400Response(
-                        messageSource.getMessage("item.validation.itemsID.invalid", null, Locale.getDefault()));
+            return ResponseUtil.error400Response(Constants.ITEM_VALIDATION_ITEMS_ID_INVALID);
          }
 
          ItemDto result = ItemDto
@@ -154,8 +140,7 @@ public class ItemServiceImpl implements ItemService {
                .lastReStock(existingItem.get().getLastRestock())
                .build();
 
-         String messageTemplate = messageSource.getMessage("item.retrieved.success", null, Locale.getDefault());
-         String message = MessageFormat.format(messageTemplate, existingItem.get().getItemsCode());
+         String message = MessageFormat.format(Constants.ITEM_RETRIEVED_SUCCESS, existingItem.get().getItemsCode());
 
          return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
@@ -169,15 +154,12 @@ public class ItemServiceImpl implements ItemService {
       try {
          Optional<ItemEntity> existingItem = itemRepository.findById(itemID);
          if (!existingItem.isPresent()) {
-            return ResponseUtil
-                  .error400Response(
-                        messageSource.getMessage("item.validation.itemsID.invalid", null, Locale.getDefault()));
+            return ResponseUtil.error400Response(Constants.ITEM_VALIDATION_ITEMS_ID_INVALID);
          }
 
          itemRepository.deleteById(itemID);
 
-         String messageTemplate = messageSource.getMessage("item.deleted.success", null, Locale.getDefault());
-         String message = MessageFormat.format(messageTemplate, existingItem.get().getItemsCode());
+         String message = MessageFormat.format(Constants.ITEM_DELETED_SUCCESS, existingItem.get().getItemsCode());
 
          return ResponseUtil.success200Response(message, null);
       } catch (Exception e) {
@@ -218,8 +200,7 @@ public class ItemServiceImpl implements ItemService {
                .totalItems(itemPage.getTotalElements())
                .build();
 
-         String message = messageSource.getMessage("items.retrieved.success", null, Locale.getDefault());
-         return ResponseUtil.success200Response(message, result);
+         return ResponseUtil.success200Response(Constants.ITEMS_RETRIEVED_SUCCESS, result);
       } catch (Exception e) {
          log.error(e.getMessage());
          return ResponseUtil.error500Response(e.getMessage());

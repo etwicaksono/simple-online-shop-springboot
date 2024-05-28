@@ -3,7 +3,6 @@ package com.etwicaksono.btpnonlineshop.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.etwicaksono.btpnonlineshop.dto.WebResponse;
-import com.etwicaksono.btpnonlineshop.dto.customer.GetListCustomerRequest;
 import com.etwicaksono.btpnonlineshop.dto.item.CreateItemRequest;
 import com.etwicaksono.btpnonlineshop.dto.item.GetListItemRequest;
 import com.etwicaksono.btpnonlineshop.dto.item.UpdateItemRequest;

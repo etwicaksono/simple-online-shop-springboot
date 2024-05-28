@@ -2,6 +2,8 @@ package com.etwicaksono.btpnonlineshop.dto.customer;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.etwicaksono.btpnonlineshop.utils.Constants;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;

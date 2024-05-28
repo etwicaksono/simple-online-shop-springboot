@@ -28,6 +28,7 @@ import com.etwicaksono.btpnonlineshop.dto.customer.UpdateCustomerRequest;
 import com.etwicaksono.btpnonlineshop.entity.CustomerEntity;
 import com.etwicaksono.btpnonlineshop.repository.CustomerRepository;
 import com.etwicaksono.btpnonlineshop.service.specification.CustomerSpecification;
+import com.etwicaksono.btpnonlineshop.utils.Constants;
 import com.etwicaksono.btpnonlineshop.utils.ResponseUtil;
 
 import io.minio.ObjectWriteResponse;
@@ -38,9 +39,6 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomerServiceImpl implements CustomerService {
    @Autowired
    private CustomerRepository customerRepository;
-
-   @Autowired
-   private MessageSource messageSource;
 
    @Autowired
    private ValidationService validator;
@@ -57,15 +55,11 @@ public class CustomerServiceImpl implements CustomerService {
       try {
          String userPic = null;
          if (customerRepository.existsByCustomerCode(request.getCode())) {
-            return ResponseUtil
-                  .error400Response(
-                        messageSource.getMessage("customer.validation.code.isExist", null, Locale.getDefault()));
+            return ResponseUtil.error400Response(Constants.CUSTOMER_VALIDATION_CODE_IS_EXIST);
          }
 
          if (customerRepository.existsByCustomerPhone(request.getPhone())) {
-            return ResponseUtil
-                  .error400Response(
-                        messageSource.getMessage("customer.validation.phone.isExist", null, Locale.getDefault()));
+            return ResponseUtil.error400Response(Constants.CUSTOMER_VALIDATION_PHONE_IS_EXIST);
          }
 
          if (request.getPic() != null && !request.getPic().isEmpty()) {
@@ -108,8 +102,7 @@ public class CustomerServiceImpl implements CustomerService {
                .lastOrderDate(customer.getLastOrderDate())
                .build();
 
-         String messageTemplate = messageSource.getMessage("customer.created.success", null, Locale.getDefault());
-         String message = MessageFormat.format(messageTemplate, request.getCode());
+         String message = MessageFormat.format(Constants.CUSTOMER_CREATED_SUCCESS, request.getCode());
 
          return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
@@ -127,23 +120,17 @@ public class CustomerServiceImpl implements CustomerService {
          Integer customerID = request.getCustomerID();
          Optional<CustomerEntity> existingCustomer = customerRepository.findById(customerID);
          if (!existingCustomer.isPresent()) {
-            return ResponseUtil
-                  .error400Response(
-                        messageSource.getMessage("customer.validation.customerID.invalid", null, Locale.getDefault()));
+            return ResponseUtil.error400Response(Constants.CUSTOMER_VALIDATION_CUSTOMER_ID_INVALID);
          }
          userPic = existingCustomer.get().getPic();
          lastOrderDate = existingCustomer.get().getLastOrderDate();
 
          if (customerRepository.existsByCustomerCodeAndCustomerIDNot(request.getCode(), customerID)) {
-            return ResponseUtil
-                  .error400Response(
-                        messageSource.getMessage("customer.validation.code.isExist", null, Locale.getDefault()));
+            return ResponseUtil.error400Response(Constants.CUSTOMER_VALIDATION_CODE_IS_EXIST);
          }
 
          if (customerRepository.existsByCustomerPhoneAndCustomerIDNot(request.getPhone(), customerID)) {
-            return ResponseUtil
-                  .error400Response(
-                        messageSource.getMessage("customer.validation.phone.isExist", null, Locale.getDefault()));
+            return ResponseUtil.error400Response(Constants.CUSTOMER_VALIDATION_PHONE_IS_EXIST);
          }
 
          if (request.getLastOrderDate() != null) {
@@ -193,8 +180,7 @@ public class CustomerServiceImpl implements CustomerService {
                .lastOrderDate(lastOrderDate)
                .build();
 
-         String messageTemplate = messageSource.getMessage("customer.updated.success", null, Locale.getDefault());
-         String message = MessageFormat.format(messageTemplate, request.getCode());
+         String message = MessageFormat.format(Constants.CUSTOMER_UPDATED_SUCCESS, request.getCode());
 
          return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
@@ -208,9 +194,7 @@ public class CustomerServiceImpl implements CustomerService {
       try {
          Optional<CustomerEntity> existingCustomer = customerRepository.findById(customerID);
          if (!existingCustomer.isPresent()) {
-            return ResponseUtil
-                  .error400Response(
-                        messageSource.getMessage("customer.validation.customerID.invalid", null, Locale.getDefault()));
+            return ResponseUtil.error400Response(Constants.CUSTOMER_VALIDATION_CUSTOMER_ID_INVALID);
          }
 
          CustomerDto result = CustomerDto
@@ -225,8 +209,8 @@ public class CustomerServiceImpl implements CustomerService {
                .lastOrderDate(existingCustomer.get().getLastOrderDate())
                .build();
 
-         String messageTemplate = messageSource.getMessage("customer.retrieved.success", null, Locale.getDefault());
-         String message = MessageFormat.format(messageTemplate, existingCustomer.get().getCustomerCode());
+         String message = MessageFormat.format(Constants.CUSTOMER_RETRIEVED_SUCCESS,
+               existingCustomer.get().getCustomerCode());
 
          return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
@@ -240,9 +224,7 @@ public class CustomerServiceImpl implements CustomerService {
       try {
          Optional<CustomerEntity> existingCustomer = customerRepository.findById(customerID);
          if (!existingCustomer.isPresent()) {
-            return ResponseUtil
-                  .error400Response(
-                        messageSource.getMessage("customer.validation.customerID.invalid", null, Locale.getDefault()));
+            return ResponseUtil.error400Response(Constants.CUSTOMER_VALIDATION_CUSTOMER_ID_INVALID);
          }
 
          // delete file if exist
@@ -252,8 +234,8 @@ public class CustomerServiceImpl implements CustomerService {
 
          customerRepository.deleteById(customerID);
 
-         String messageTemplate = messageSource.getMessage("customer.deleted.success", null, Locale.getDefault());
-         String message = MessageFormat.format(messageTemplate, existingCustomer.get().getCustomerCode());
+         String message = MessageFormat.format(Constants.CUSTOMER_DELETED_SUCCESS,
+               existingCustomer.get().getCustomerCode());
 
          return ResponseUtil.success200Response(message, null);
       } catch (Exception e) {
@@ -295,8 +277,7 @@ public class CustomerServiceImpl implements CustomerService {
                .totalItems(customerPage.getTotalElements())
                .build();
 
-         String message = messageSource.getMessage("customers.retrieved.success", null, Locale.getDefault());
-         return ResponseUtil.success200Response(message, result);
+         return ResponseUtil.success200Response(Constants.CUSTOMER_RETRIEVED_SUCCESS, result);
       } catch (Exception e) {
          log.error(e.getMessage());
          return ResponseUtil.error500Response(e.getMessage());
