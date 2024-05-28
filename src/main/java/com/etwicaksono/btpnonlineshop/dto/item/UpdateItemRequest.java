@@ -8,22 +8,22 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class UpdateItemRequest {
-   @NotNull(message = "{item.validation.itemsID.required}")
+   @NotNull(message = "{itemsID.required}")
    private Integer itemsID;
 
-   @NotNull(message = "{item.validation.name.required}")
+   @NotNull(message = "{item.name.required}")
    private String name;
 
-   @NotNull(message = "{item.validation.code.required}")
+   @NotNull(message = "{item.code.required}")
    private String code;
 
-   @NotNull(message = "{item.validation.stock.required}")
+   @NotNull(message = "{item.stock.required}")
    private Integer stock;
 
-   @NotNull(message = "{item.validation.price.required}")
+   @NotNull(message = "{item.price.required}")
    private Integer price;
 
-   @NotNull(message = "{item.validation.isAvailable.required}")
+   @NotNull(message = "{item.isAvailable.required}")
    private Integer isAvailable;
 
    private LocalDate lastReStock;

@@ -44,6 +44,9 @@ public class CustomerServiceImpl implements CustomerService {
    private ValidationService validator;
 
    @Autowired
+   private MessageSource messageSource;
+
+   @Autowired
    private MinioService minioService;
 
    @Value("${minio.bucketName}")
@@ -55,11 +58,13 @@ public class CustomerServiceImpl implements CustomerService {
       try {
          String userPic = null;
          if (customerRepository.existsByCustomerCode(request.getCode())) {
-            return ResponseUtil.error400Response(Constants.CUSTOMER_VALIDATION_CODE_IS_EXIST);
+            return ResponseUtil
+                  .error400Response(Constants.getMessage(messageSource, Constants.CUSTOMER_CODE_IS_EXIST));
          }
 
          if (customerRepository.existsByCustomerPhone(request.getPhone())) {
-            return ResponseUtil.error400Response(Constants.CUSTOMER_VALIDATION_PHONE_IS_EXIST);
+            return ResponseUtil
+                  .error400Response(Constants.getMessage(messageSource, Constants.CUSTOMER_PHONE_IS_EXIST));
          }
 
          if (request.getPic() != null && !request.getPic().isEmpty()) {
@@ -102,7 +107,8 @@ public class CustomerServiceImpl implements CustomerService {
                .lastOrderDate(customer.getLastOrderDate())
                .build();
 
-         String message = MessageFormat.format(Constants.CUSTOMER_CREATED_SUCCESS, request.getCode());
+         String message = MessageFormat.format(Constants.getMessage(messageSource, Constants.CUSTOMER_CREATED_SUCCESS),
+               request.getCode());
 
          return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
@@ -120,17 +126,19 @@ public class CustomerServiceImpl implements CustomerService {
          Integer customerID = request.getCustomerID();
          Optional<CustomerEntity> existingCustomer = customerRepository.findById(customerID);
          if (!existingCustomer.isPresent()) {
-            return ResponseUtil.error400Response(Constants.CUSTOMER_VALIDATION_CUSTOMER_ID_INVALID);
+            return ResponseUtil.error400Response(Constants.getMessage(messageSource, Constants.CUSTOMER_ID_INVALID));
          }
          userPic = existingCustomer.get().getPic();
          lastOrderDate = existingCustomer.get().getLastOrderDate();
 
          if (customerRepository.existsByCustomerCodeAndCustomerIDNot(request.getCode(), customerID)) {
-            return ResponseUtil.error400Response(Constants.CUSTOMER_VALIDATION_CODE_IS_EXIST);
+            return ResponseUtil
+                  .error400Response(Constants.getMessage(messageSource, Constants.CUSTOMER_CODE_IS_EXIST));
          }
 
          if (customerRepository.existsByCustomerPhoneAndCustomerIDNot(request.getPhone(), customerID)) {
-            return ResponseUtil.error400Response(Constants.CUSTOMER_VALIDATION_PHONE_IS_EXIST);
+            return ResponseUtil
+                  .error400Response(Constants.getMessage(messageSource, Constants.CUSTOMER_PHONE_IS_EXIST));
          }
 
          if (request.getLastOrderDate() != null) {
@@ -180,7 +188,8 @@ public class CustomerServiceImpl implements CustomerService {
                .lastOrderDate(lastOrderDate)
                .build();
 
-         String message = MessageFormat.format(Constants.CUSTOMER_UPDATED_SUCCESS, request.getCode());
+         String message = MessageFormat.format(Constants.getMessage(messageSource, Constants.CUSTOMER_UPDATED_SUCCESS),
+               request.getCode());
 
          return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
@@ -194,7 +203,7 @@ public class CustomerServiceImpl implements CustomerService {
       try {
          Optional<CustomerEntity> existingCustomer = customerRepository.findById(customerID);
          if (!existingCustomer.isPresent()) {
-            return ResponseUtil.error400Response(Constants.CUSTOMER_VALIDATION_CUSTOMER_ID_INVALID);
+            return ResponseUtil.error400Response(Constants.getMessage(messageSource, Constants.CUSTOMER_ID_INVALID));
          }
 
          CustomerDto result = CustomerDto
@@ -209,7 +218,8 @@ public class CustomerServiceImpl implements CustomerService {
                .lastOrderDate(existingCustomer.get().getLastOrderDate())
                .build();
 
-         String message = MessageFormat.format(Constants.CUSTOMER_RETRIEVED_SUCCESS,
+         String message = MessageFormat.format(
+               Constants.getMessage(messageSource, Constants.CUSTOMER_RETRIEVED_SUCCESS),
                existingCustomer.get().getCustomerCode());
 
          return ResponseUtil.success200Response(message, result);
@@ -224,7 +234,7 @@ public class CustomerServiceImpl implements CustomerService {
       try {
          Optional<CustomerEntity> existingCustomer = customerRepository.findById(customerID);
          if (!existingCustomer.isPresent()) {
-            return ResponseUtil.error400Response(Constants.CUSTOMER_VALIDATION_CUSTOMER_ID_INVALID);
+            return ResponseUtil.error400Response(Constants.getMessage(messageSource, Constants.CUSTOMER_ID_INVALID));
          }
 
          // delete file if exist
@@ -234,7 +244,7 @@ public class CustomerServiceImpl implements CustomerService {
 
          customerRepository.deleteById(customerID);
 
-         String message = MessageFormat.format(Constants.CUSTOMER_DELETED_SUCCESS,
+         String message = MessageFormat.format(Constants.getMessage(messageSource, Constants.CUSTOMER_DELETED_SUCCESS),
                existingCustomer.get().getCustomerCode());
 
          return ResponseUtil.success200Response(message, null);
@@ -277,7 +287,9 @@ public class CustomerServiceImpl implements CustomerService {
                .totalItems(customerPage.getTotalElements())
                .build();
 
-         return ResponseUtil.success200Response(Constants.CUSTOMER_RETRIEVED_SUCCESS, result);
+         return ResponseUtil.success200Response(
+               Constants.getMessage(messageSource, Constants.CUSTOMER_RETRIEVED_SUCCESS),
+               result);
       } catch (Exception e) {
          log.error(e.getMessage());
          return ResponseUtil.error500Response(e.getMessage());

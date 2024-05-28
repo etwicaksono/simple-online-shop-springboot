@@ -10,22 +10,22 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class UpdateCustomerRequest {
-   @NotNull(message = "{customer.validation.customerID.required}")
+   @NotNull(message = "{customerID.required}")
    private Integer customerID;
 
-   @NotNull(message = "{customer.validation.name.required}")
+   @NotNull(message = "{customer.name.required}")
    private String name;
 
-   @NotNull(message = "{customer.validation.address.required}")
+   @NotNull(message = "{customer.address.required}")
    private String address;
 
-   @NotNull(message = "{customer.validation.code.required}")
+   @NotNull(message = "{customer.code.required}")
    private String code;
 
-   @NotNull(message = "{customer.validation.phone.required}")
+   @NotNull(message = "{customer.phone.required}")
    private String phone;
 
-   @NotNull(message = "{customer.validation.isActive.required}")
+   @NotNull(message = "{customer.isActive.required}")
    private Integer isActive;
 
    private LocalDate lastOrderDate;

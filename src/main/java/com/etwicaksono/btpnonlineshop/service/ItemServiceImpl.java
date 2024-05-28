@@ -40,12 +40,16 @@ public class ItemServiceImpl implements ItemService {
    @Autowired
    private ValidationService validator;
 
+   @Autowired
+   private MessageSource messageSource;
+
    @Override
    public ResponseEntity<WebResponse<Object>> createItem(CreateItemRequest request) {
       validator.validate(request);
       try {
          if (itemRepository.existsByItemsCode(request.getCode())) {
-            return ResponseUtil.error400Response(Constants.ITEM_VALIDATION_CODE_IS_EXIST);
+            return ResponseUtil
+                  .error400Response(Constants.getMessage(messageSource, Constants.ITEM_CODE_IS_EXIST));
          }
 
          ItemEntity item = ItemEntity.builder()
@@ -69,7 +73,8 @@ public class ItemServiceImpl implements ItemService {
                .lastReStock(item.getLastRestock())
                .build();
 
-         String message = MessageFormat.format(Constants.ITEM_CREATED_SUCCESS, request.getCode());
+         String message = MessageFormat.format(Constants.getMessage(messageSource, Constants.ITEM_CREATED_SUCCESS),
+               request.getCode());
 
          return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
@@ -86,12 +91,13 @@ public class ItemServiceImpl implements ItemService {
          Integer itemsID = request.getItemsID();
          Optional<ItemEntity> existingItem = itemRepository.findById(itemsID);
          if (!existingItem.isPresent()) {
-            return ResponseUtil.error400Response(Constants.ITEM_VALIDATION_ITEMS_ID_INVALID);
+            return ResponseUtil.error400Response(Constants.getMessage(messageSource, Constants.ITEMS_ID_INVALID));
          }
          lastReStock = existingItem.get().getLastRestock();
 
          if (itemRepository.existsByItemsCodeAndItemsIDNot(request.getCode(), itemsID)) {
-            return ResponseUtil.error400Response(Constants.ITEM_VALIDATION_CODE_IS_EXIST);
+            return ResponseUtil
+                  .error400Response(Constants.getMessage(messageSource, Constants.ITEM_CODE_IS_EXIST));
          }
 
          if (request.getLastReStock() != null) {
@@ -112,7 +118,8 @@ public class ItemServiceImpl implements ItemService {
                .lastReStock(lastReStock)
                .build();
 
-         String message = MessageFormat.format(Constants.ITEM_UPDATED_SUCCESS, request.getCode());
+         String message = MessageFormat.format(Constants.getMessage(messageSource, Constants.ITEM_UPDATED_SUCCESS),
+               request.getCode());
 
          return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
@@ -126,7 +133,7 @@ public class ItemServiceImpl implements ItemService {
       try {
          Optional<ItemEntity> existingItem = itemRepository.findById(itemID);
          if (!existingItem.isPresent()) {
-            return ResponseUtil.error400Response(Constants.ITEM_VALIDATION_ITEMS_ID_INVALID);
+            return ResponseUtil.error400Response(Constants.getMessage(messageSource, Constants.ITEMS_ID_INVALID));
          }
 
          ItemDto result = ItemDto
@@ -140,7 +147,8 @@ public class ItemServiceImpl implements ItemService {
                .lastReStock(existingItem.get().getLastRestock())
                .build();
 
-         String message = MessageFormat.format(Constants.ITEM_RETRIEVED_SUCCESS, existingItem.get().getItemsCode());
+         String message = MessageFormat.format(Constants.getMessage(messageSource, Constants.ITEM_RETRIEVED_SUCCESS),
+               existingItem.get().getItemsCode());
 
          return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
@@ -154,12 +162,13 @@ public class ItemServiceImpl implements ItemService {
       try {
          Optional<ItemEntity> existingItem = itemRepository.findById(itemID);
          if (!existingItem.isPresent()) {
-            return ResponseUtil.error400Response(Constants.ITEM_VALIDATION_ITEMS_ID_INVALID);
+            return ResponseUtil.error400Response(Constants.getMessage(messageSource, Constants.ITEMS_ID_INVALID));
          }
 
          itemRepository.deleteById(itemID);
 
-         String message = MessageFormat.format(Constants.ITEM_DELETED_SUCCESS, existingItem.get().getItemsCode());
+         String message = MessageFormat.format(Constants.getMessage(messageSource, Constants.ITEM_DELETED_SUCCESS),
+               existingItem.get().getItemsCode());
 
          return ResponseUtil.success200Response(message, null);
       } catch (Exception e) {
@@ -200,7 +209,8 @@ public class ItemServiceImpl implements ItemService {
                .totalItems(itemPage.getTotalElements())
                .build();
 
-         return ResponseUtil.success200Response(Constants.ITEMS_RETRIEVED_SUCCESS, result);
+         return ResponseUtil.success200Response(Constants.getMessage(messageSource, Constants.ITEMS_RETRIEVED_SUCCESS),
+               result);
       } catch (Exception e) {
          log.error(e.getMessage());
          return ResponseUtil.error500Response(e.getMessage());
