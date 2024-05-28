@@ -3,12 +3,20 @@ package com.etwicaksono.btpnonlineshop.service;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.etwicaksono.btpnonlineshop.dto.Pagination;
 import com.etwicaksono.btpnonlineshop.dto.WebResponse;
 import com.etwicaksono.btpnonlineshop.dto.order.CreateOrderRequest;
 import com.etwicaksono.btpnonlineshop.dto.order.GetListOrderRequest;
@@ -20,6 +28,7 @@ import com.etwicaksono.btpnonlineshop.entity.OrderEntity;
 import com.etwicaksono.btpnonlineshop.repository.CustomerRepository;
 import com.etwicaksono.btpnonlineshop.repository.ItemRepository;
 import com.etwicaksono.btpnonlineshop.repository.OrderRepository;
+import com.etwicaksono.btpnonlineshop.service.specification.OrderSpecification;
 import com.etwicaksono.btpnonlineshop.utils.Constants;
 import com.etwicaksono.btpnonlineshop.utils.ResponseUtil;
 
@@ -153,20 +162,91 @@ public class OrderServiceImpl implements OrderService {
 
    @Override
    public ResponseEntity<WebResponse<Object>> findOrder(Integer orderID) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'findOrder'");
+      try {
+         Optional<OrderEntity> existingOrder = orderRepository.findById(orderID);
+         if (!existingOrder.isPresent()) {
+            return ResponseUtil.error400Response(Constants.getMessage(messageSource, Constants.ITEMS_ID_INVALID));
+         }
+
+         OrderDto result = OrderDto
+               .builder()
+               .orderId(existingOrder.get().getOrderID())
+               .orderCode(existingOrder.get().getOrderCode())
+               .orderDate(existingOrder.get().getOrderDate())
+               .totalPrice(existingOrder.get().getTotalPrice())
+               .quantity(existingOrder.get().getQuantity())
+               .customer(existingOrder.get().getCustomer())
+               .item(existingOrder.get().getItem())
+               .build();
+
+         String message = MessageFormat.format(Constants.getMessage(messageSource, Constants.ORDER_RETRIEVED_SUCCESS),
+               existingOrder.get().getOrderCode());
+
+         return ResponseUtil.success200Response(message, result);
+      } catch (Exception e) {
+         log.error(e.getMessage());
+         return ResponseUtil.error500Response(e.getMessage());
+      }
    }
 
    @Override
    public ResponseEntity<WebResponse<Object>> deleteOrder(Integer orderID) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'deleteOrder'");
+      try {
+         Optional<OrderEntity> existingOrder = orderRepository.findById(orderID);
+         if (!existingOrder.isPresent()) {
+            return ResponseUtil.error400Response(Constants.getMessage(messageSource, Constants.ORDER_ID_INVALID));
+         }
+
+         orderRepository.deleteById(orderID);
+
+         String message = MessageFormat.format(Constants.getMessage(messageSource, Constants.ITEM_DELETED_SUCCESS),
+               existingOrder.get().getOrderCode());
+
+         return ResponseUtil.success200Response(message, null);
+      } catch (Exception e) {
+         log.error(e.getMessage());
+         return ResponseUtil.error500Response(e.getMessage());
+      }
    }
 
    @Override
    public ResponseEntity<WebResponse<Object>> getOrder(GetListOrderRequest request) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'getOrder'");
+      validator.validate(request);
+      try {
+         int pageNumber = Integer.parseInt(request.getPageNumber());
+         int pageSize = Integer.parseInt(request.getPageSize());
+         List<OrderDto> orders = new ArrayList<>();
+         Sort.Direction sortDirection = request.getSortDirection()
+               .equalsIgnoreCase("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC;
+         OrderSpecification orderSpecification = new OrderSpecification(request);
+         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortDirection, "orderID"));
+         Page<OrderEntity> itemPage = orderRepository.findAll(orderSpecification, pageable);
+         for (OrderEntity order : itemPage) {
+            orders.add(OrderDto
+                  .builder()
+                  .orderId(order.getOrderID())
+                  .orderCode(order.getOrderCode())
+                  .orderDate(order.getOrderDate())
+                  .totalPrice(order.getTotalPrice())
+                  .quantity(order.getQuantity())
+                  .customer(order.getCustomer())
+                  .item(order.getItem())
+                  .build());
+         }
+
+         Pagination<List<OrderDto>> result = Pagination
+               .<List<OrderDto>>builder()
+               .data(orders)
+               .totalPage(itemPage.getTotalPages())
+               .totalItems(itemPage.getTotalElements())
+               .build();
+
+         return ResponseUtil.success200Response(Constants.getMessage(messageSource, Constants.ORDERS_RETRIEVED_SUCCESS),
+               result);
+      } catch (Exception e) {
+         log.error(e.getMessage());
+         return ResponseUtil.error500Response(e.getMessage());
+      }
    }
 
 }

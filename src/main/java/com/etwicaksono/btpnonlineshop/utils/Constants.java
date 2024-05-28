@@ -46,9 +46,11 @@ public class Constants {
 
    public static final String ORDER_CREATED_SUCCESS = "order.created.success";
    public static final String ORDER_QUANTITY_REQUIRED = "order.quantity.required";
+   public static final String ORDER_RETRIEVED_SUCCESS = "order.retrieved.success";
    public static final String ORDER_UPDATED_SUCCESS = "order.updated.success";
    public static final String ORDER_ID_INVALID = "orderID.invalid";
    public static final String ORDER_ID_REQUIRED = "orderID.required";
+   public static final String ORDERS_RETRIEVED_SUCCESS = "orders.retrieved.success";
 
    public static final String PAGE_NUMBER_REQUIRED = "pageNumber.required";
    public static final String PAGE_SIZE_REQUIRED = "pageSize.required";
