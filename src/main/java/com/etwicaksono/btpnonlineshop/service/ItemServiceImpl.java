@@ -17,6 +17,8 @@ import com.etwicaksono.btpnonlineshop.utils.ResponseUtil;
 
 import lombok.extern.slf4j.Slf4j;
 import java.util.Locale;
+import java.time.LocalDate;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -74,8 +76,49 @@ public class ItemServiceImpl implements ItemService {
 
    @Override
    public ResponseEntity<WebResponse<Object>> updateItem(UpdateItemRequest request) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'updateItem'");
+      validator.validate(request);
+      try {
+         LocalDate lastReStock = null;
+         Integer itemsID = request.getItemsID();
+         Optional<ItemEntity> existingItem = itemRepository.findById(itemsID);
+         if (!existingItem.isPresent()) {
+            return ResponseUtil.error400Response(
+                  messageSource.getMessage("item.validation.itemsID.invalid", null, Locale.getDefault()));
+         }
+         lastReStock = existingItem.get().getLastRestock();
+
+         if (itemRepository.existsByItemsCodeAndItemsIDNot(request.getCode(), itemsID)) {
+            return ResponseUtil
+                  .error400Response(
+                        messageSource.getMessage("item.validation.code.isExist", null, Locale.getDefault()));
+         }
+
+         if (request.getLastReStock() != null) {
+            lastReStock = request.getLastReStock();
+         }
+
+         itemRepository.updateItem(request.getName(), request.getCode(), request.getStock(), request.getPrice(),
+               request.getIsAvailable(), lastReStock, itemsID);
+
+         ItemDto result = ItemDto
+               .builder()
+               .itemsID(itemsID)
+               .itemsName(request.getName())
+               .itemsCode(request.getCode())
+               .stock(request.getStock())
+               .price(request.getPrice())
+               .isAvailable(request.getIsAvailable())
+               .lastReStock(lastReStock)
+               .build();
+
+         String messageTemplate = messageSource.getMessage("item.updated.success", null, Locale.getDefault());
+         String message = MessageFormat.format(messageTemplate, request.getCode());
+
+         return ResponseUtil.success200Response(message, result);
+      } catch (Exception e) {
+         log.error(e.getMessage());
+         return ResponseUtil.error500Response(e.getMessage());
+      }
    }
 
    @Override
