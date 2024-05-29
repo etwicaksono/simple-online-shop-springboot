@@ -112,6 +112,7 @@ public class CustomerServiceImpl implements CustomerService {
          return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
          log.error(e.getMessage());
+         e.printStackTrace();
          return ResponseUtil.error500Response(e.getMessage());
       }
    }
@@ -193,6 +194,7 @@ public class CustomerServiceImpl implements CustomerService {
          return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
          log.error(e.getMessage());
+         e.printStackTrace();
          return ResponseUtil.error500Response(e.getMessage());
       }
    }
@@ -224,6 +226,7 @@ public class CustomerServiceImpl implements CustomerService {
          return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
          log.error(e.getMessage());
+         e.printStackTrace();
          return ResponseUtil.error500Response(e.getMessage());
       }
    }
@@ -249,6 +252,7 @@ public class CustomerServiceImpl implements CustomerService {
          return ResponseUtil.success200Response(message, null);
       } catch (Exception e) {
          log.error(e.getMessage());
+         e.printStackTrace();
          return ResponseUtil.error500Response(e.getMessage());
       }
    }
@@ -291,6 +295,7 @@ public class CustomerServiceImpl implements CustomerService {
                result);
       } catch (Exception e) {
          log.error(e.getMessage());
+         e.printStackTrace();
          return ResponseUtil.error500Response(e.getMessage());
       }
    }

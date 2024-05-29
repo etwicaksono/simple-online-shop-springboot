@@ -78,6 +78,7 @@ public class ItemServiceImpl implements ItemService {
          return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
          log.error(e.getMessage());
+         e.printStackTrace();
          return ResponseUtil.error500Response(e.getMessage());
       }
    }
@@ -123,6 +124,7 @@ public class ItemServiceImpl implements ItemService {
          return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
          log.error(e.getMessage());
+         e.printStackTrace();
          return ResponseUtil.error500Response(e.getMessage());
       }
    }
@@ -152,6 +154,7 @@ public class ItemServiceImpl implements ItemService {
          return ResponseUtil.success200Response(message, result);
       } catch (Exception e) {
          log.error(e.getMessage());
+         e.printStackTrace();
          return ResponseUtil.error500Response(e.getMessage());
       }
    }
@@ -172,6 +175,7 @@ public class ItemServiceImpl implements ItemService {
          return ResponseUtil.success200Response(message, null);
       } catch (Exception e) {
          log.error(e.getMessage());
+         e.printStackTrace();
          return ResponseUtil.error500Response(e.getMessage());
       }
    }
@@ -212,6 +216,7 @@ public class ItemServiceImpl implements ItemService {
                result);
       } catch (Exception e) {
          log.error(e.getMessage());
+         e.printStackTrace();
          return ResponseUtil.error500Response(e.getMessage());
       }
    }

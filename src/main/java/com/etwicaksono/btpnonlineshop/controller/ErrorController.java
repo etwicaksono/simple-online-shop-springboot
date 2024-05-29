@@ -32,6 +32,7 @@ public class ErrorController {
    @ExceptionHandler(Exception.class)
    public ResponseEntity<WebResponse<Object>> handle(Exception e) {
       log.error(e.getMessage());
+      e.printStackTrace();
       return ResponseUtil.error500Response(e.getMessage());
    }
 }
