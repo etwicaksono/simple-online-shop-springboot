@@ -291,7 +291,7 @@ public class CustomerServiceImpl implements CustomerService {
                .build();
 
          return ResponseUtil.success200Response(
-               Constants.getMessage(messageSource, Constants.CUSTOMER_RETRIEVED_SUCCESS),
+               Constants.getMessage(messageSource, Constants.CUSTOMERS_RETRIEVED_SUCCESS),
                result);
       } catch (Exception e) {
          log.error(e.getMessage());
