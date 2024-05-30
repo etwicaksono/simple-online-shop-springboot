@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GetListCustomerRequest {
    @NotNull(message = "{pageNumber.required}")
-   private String pageNumber;
+   private Integer pageNumber;
 
    @NotNull(message = "{pageSize.required}")
-   private String pageSize;
+   private Integer pageSize;
 
    @NotNull(message = "{sortDirection.required}")
    private String sortDirection;
@@ -24,5 +24,5 @@ public class GetListCustomerRequest {
    private String customerAddress;
    private String customerCode;
    private String customerPhone;
-   private String isActive;
+   private Integer isActive;
 }

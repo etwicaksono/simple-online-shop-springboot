@@ -261,8 +261,8 @@ public class CustomerServiceImpl implements CustomerService {
    public ResponseEntity<WebResponse<Object>> getCustomer(GetListCustomerRequest request) {
       validator.validate(request);
       try {
-         int pageNumber = Integer.parseInt(request.getPageNumber());
-         int pageSize = Integer.parseInt(request.getPageSize());
+         int pageNumber = request.getPageNumber();
+         int pageSize = request.getPageSize();
          List<CustomerDto> customers = new ArrayList<>();
          Sort.Direction sortDirection = request.getSortDirection()
                .equalsIgnoreCase("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC;

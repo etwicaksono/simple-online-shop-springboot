@@ -199,14 +199,14 @@ public class CustomerController {
    })
    @GetMapping(value = "/list")
    public ResponseEntity<WebResponse<Object>> listCustomer(
-         @Parameter(name = "pageNumber", description = "PageNumber of customers list (required)", required = true) @RequestParam("pageNumber") String pageNumber,
-         @Parameter(name = "pageSize", description = "PageSize of customers list (required)", required = true) @RequestParam("pageSize") String pageSize,
+         @Parameter(name = "pageNumber", description = "PageNumber of customers list (required)", required = true) @RequestParam("pageNumber") Integer pageNumber,
+         @Parameter(name = "pageSize", description = "PageSize of customers list (required)", required = true) @RequestParam("pageSize") Integer pageSize,
          @Parameter(name = "sortDirection", description = "Sort direction of customers list (required)", required = true) @RequestParam("sortDirection") String sortDirection,
          @Parameter(name = "customerName", description = "Customer name filter of customers list (optional)", required = false) @RequestParam(value = "customerName", required = false) String customerName,
          @Parameter(name = "customerAddress", description = "Customer address filter of customers list (optional)", required = false) @RequestParam(value = "customerAddress", required = false) String customerAddress,
          @Parameter(name = "customerCode", description = "Customer code filter of customers list (optional)", required = false) @RequestParam(value = "customerCode", required = false) String customerCode,
          @Parameter(name = "customerPhone", description = "Customer phone filter of customers list (optional)", required = false) @RequestParam(value = "customerPhone", required = false) String customerPhone,
-         @Parameter(name = "isActive", description = "Is active status filter of customers list (optional)", required = false) @RequestParam(value = "isActive", required = false) String isActive) {
+         @Parameter(name = "isActive", description = "Is active status filter of customers list (optional)", required = false) @RequestParam(value = "isActive", required = false) Integer isActive) {
 
       return customerService.getCustomer(GetListCustomerRequest.builder()
             .pageNumber(pageNumber)
