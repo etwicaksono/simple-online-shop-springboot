@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.Nullable;
 
-import com.etwicaksono.btpnonlineshop.dto.item.GetListItemRequest;
 import com.etwicaksono.btpnonlineshop.dto.order.GetListOrderRequest;
 import com.etwicaksono.btpnonlineshop.entity.OrderEntity;
 
@@ -22,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderSpecification implements Specification<OrderEntity> {
-   private GetListOrderRequest request;
+   private transient GetListOrderRequest request;
 
    @Override
    @Nullable

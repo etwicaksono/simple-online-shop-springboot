@@ -24,5 +24,5 @@ public class GetListCustomerRequest {
    private String customerAddress;
    private String customerCode;
    private String customerPhone;
-   private Integer isActive;
+   private Boolean isActive;
 }

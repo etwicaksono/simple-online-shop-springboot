@@ -20,5 +20,5 @@ public class CreateItemRequest {
    private Integer price;
 
    @NotNull(message = "{item.isAvailable.required}")
-   private Integer isAvailable;
+   private Boolean isAvailable;
 }

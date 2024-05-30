@@ -41,8 +41,8 @@ public class CustomerEntity {
    @Column(name = "customer_phone", length = 32)
    private String customerPhone;
 
-   @Column(name = "is_active", columnDefinition = "int2")
-   private Integer isActive;
+   @Column(name = "is_active")
+   private Boolean isActive;
 
    @Column(name = "last_order_date")
    private LocalDate lastOrderDate;

@@ -13,7 +13,7 @@ public class CustomerDto {
    private String address;
    private String code;
    private String phone;
-   private Integer isActive;
+   private Boolean isActive;
    private String pic;
    private LocalDate lastOrderDate;
 }

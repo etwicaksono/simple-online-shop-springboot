@@ -30,7 +30,7 @@ public interface CustomerRepository
          @Param("customerAddress") String customerAddress,
          @Param("customerCode") String customerCode,
          @Param("customerPhone") String customerPhone,
-         @Param("isActive") Integer isActive,
+         @Param("isActive") Boolean isActive,
          @Param("lastOrderDate") LocalDate lastOrderDate,
          @Param("pic") String pic,
          @Param("customerID") Integer customerID);

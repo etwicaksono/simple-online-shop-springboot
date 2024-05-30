@@ -10,16 +10,13 @@ import org.springframework.context.MessageSource;
 import com.etwicaksono.btpnonlineshop.utils.Constants;
 
 @SpringBootTest
-public class ConstantsTest {
-
-   @Autowired
-   private Constants constants;
+class ConstantsTest {
 
    @Autowired
    private MessageSource messageSource;
 
    @Test
-   public void testMessages() {
+   void testMessages() {
       assertEquals("Customer created successfully",
             Constants.getMessage(messageSource, Constants.CUSTOMER_DELETED_SUCCESS));
       assertEquals("Customer deleted successfully",

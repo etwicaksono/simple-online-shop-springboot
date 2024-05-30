@@ -61,7 +61,7 @@ public class ItemController {
          @Parameter(name = "code", description = "Code of the item", required = true) @RequestParam("code") String code,
          @Parameter(name = "stock", description = "Stock number of the item", required = true) @RequestParam("stock") Integer stock,
          @Parameter(name = "price", description = "Price of the item", required = true) @RequestParam("price") Integer price,
-         @Parameter(name = "isAvailable", description = "Is available status of the item", required = true) @RequestParam("isAvailable") Integer isAvailable) {
+         @Parameter(name = "isAvailable", description = "Is available status of the item", required = true) @RequestParam("isAvailable") Boolean isAvailable) {
       CreateItemRequest request = CreateItemRequest.builder()
             .name(name)
             .code(code)
@@ -102,7 +102,7 @@ public class ItemController {
          @Parameter(name = "code", description = "the new code of the item", required = true) @RequestParam("code") String code,
          @Parameter(name = "stock", description = "the new stock of the item", required = true) @RequestParam("stock") Integer stock,
          @Parameter(name = "price", description = "the new price of the item", required = true) @RequestParam("price") Integer price,
-         @Parameter(name = "isAvailable", description = "the new availability status of the item", required = true) @RequestParam("isAvailable") Integer isAvailable) {
+         @Parameter(name = "isAvailable", description = "the new availability status of the item", required = true) @RequestParam("isAvailable") Boolean isAvailable) {
 
       UpdateItemRequest request = UpdateItemRequest.builder()
             .itemsID(itemID)

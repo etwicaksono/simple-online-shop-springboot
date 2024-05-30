@@ -1,5 +1,7 @@
 package com.etwicaksono.btpnonlineshop.dto.order;
 
+import java.io.Serializable;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetListOrderRequest {
+public class GetListOrderRequest implements Serializable {
    @NotNull(message = "{pageNumber.required}")
    private String pageNumber;
 

@@ -26,7 +26,7 @@ public class UpdateCustomerRequest {
    private String phone;
 
    @NotNull(message = "{customer.isActive.required}")
-   private Integer isActive;
+   private Boolean isActive;
 
    private LocalDate lastOrderDate;
 

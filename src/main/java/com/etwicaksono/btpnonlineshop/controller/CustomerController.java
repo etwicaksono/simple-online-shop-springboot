@@ -63,7 +63,7 @@ public class CustomerController {
          @Parameter(name = "address", description = "the address of the customer", required = true) @RequestParam("address") String address,
          @Parameter(name = "code", description = "the code of the customer", required = true) @RequestParam("code") String code,
          @Parameter(name = "phone", description = "the phone number of the customer", required = true) @RequestParam("phone") String phone,
-         @Parameter(name = "isActive", description = "the active status of the customer", required = true) @RequestParam("isActive") Integer isActive,
+         @Parameter(name = "isActive", description = "the active status of the customer", required = true) @RequestParam("isActive") Boolean isActive,
          @Parameter(name = "pic", description = "the picture of the customer (optional)", required = false) @RequestParam(value = "pic", required = false) MultipartFile userPic) {
       CreateCustomerRequest request = CreateCustomerRequest.builder()
             .name(name)
@@ -107,7 +107,7 @@ public class CustomerController {
          @Parameter(name = "address", description = "the address of the customer", required = true) @RequestParam("address") String address,
          @Parameter(name = "code", description = "the code of the customer", required = true) @RequestParam("code") String code,
          @Parameter(name = "phone", description = "the phone number of the customer", required = true) @RequestParam("phone") String phone,
-         @Parameter(name = "isActive", description = "the active status of the customer", required = true) @RequestParam("isActive") Integer isActive,
+         @Parameter(name = "isActive", description = "the active status of the customer", required = true) @RequestParam("isActive") Boolean isActive,
          @Parameter(name = "pic", description = "the picture of the customer (optional)", required = false) @RequestParam(value = "pic", required = false) MultipartFile userPic) {
 
       UpdateCustomerRequest request = UpdateCustomerRequest.builder()
@@ -206,7 +206,7 @@ public class CustomerController {
          @Parameter(name = "customerAddress", description = "Customer address filter of customers list (optional)", required = false) @RequestParam(value = "customerAddress", required = false) String customerAddress,
          @Parameter(name = "customerCode", description = "Customer code filter of customers list (optional)", required = false) @RequestParam(value = "customerCode", required = false) String customerCode,
          @Parameter(name = "customerPhone", description = "Customer phone filter of customers list (optional)", required = false) @RequestParam(value = "customerPhone", required = false) String customerPhone,
-         @Parameter(name = "isActive", description = "Is active status filter of customers list (optional)", required = false) @RequestParam(value = "isActive", required = false) Integer isActive) {
+         @Parameter(name = "isActive", description = "Is active status filter of customers list (optional)", required = false) @RequestParam(value = "isActive", required = false) Boolean isActive) {
 
       return customerService.getCustomer(GetListCustomerRequest.builder()
             .pageNumber(pageNumber)

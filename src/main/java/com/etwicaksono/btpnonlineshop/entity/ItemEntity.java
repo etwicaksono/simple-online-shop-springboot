@@ -41,8 +41,8 @@ public class ItemEntity {
    @Column(name = "price")
    private Integer price;
 
-   @Column(name = "is_available", columnDefinition = "int2")
-   private Integer isAvailable;
+   @Column(name = "is_available")
+   private Boolean isAvailable;
 
    @Column(name = "last_re_stock")
    private LocalDate lastRestock;

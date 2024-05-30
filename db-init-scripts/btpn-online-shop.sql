@@ -19,7 +19,7 @@ create table customers (
    customer_address     VARCHAR(255)         null,
    customer_code        VARCHAR(32)          null,
    customer_phone       VARCHAR(32)          null,
-   is_active            INT2                 null,
+   is_active            bool                 null,
    last_order_date      DATE                 null,
    pic                  VARCHAR(255)         null,
    constraint PK_CUSTOMERS primary key (customer_id)
@@ -34,7 +34,7 @@ create table items (
    items_code           VARCHAR(32)          null,
    stock                INT4                 null,
    price                INT4                 null,
-   is_available         INT2                 null,
+   is_available         bool                 null,
    last_re_stock        DATE                 null,
    constraint PK_ITEMS primary key (items_id)
 );

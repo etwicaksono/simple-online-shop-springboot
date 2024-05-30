@@ -13,6 +13,6 @@ public class ItemDto {
    private String itemsCode;
    private Integer stock;
    private Integer price;
-   private Integer isAvailable;
+   private Boolean isAvailable;
    private LocalDate lastReStock;
 }

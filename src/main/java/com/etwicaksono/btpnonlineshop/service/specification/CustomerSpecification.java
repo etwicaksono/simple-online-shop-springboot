@@ -33,9 +33,7 @@ public class CustomerSpecification implements Specification<CustomerEntity> {
       String customerAddress = request.getCustomerAddress();
       String customerCode = request.getCustomerCode();
       String customerPhone = request.getCustomerPhone();
-      boolean isActive = request.getIsActive() != null &&
-            !request.getIsActive().equals("") &&
-            request.getIsActive() != 0;
+      boolean isActive = request.getIsActive();
 
       if (customerName != null && !customerName.isEmpty()) {
          Predicate customerNameFilter = criteriaBuilder.like(root.get("customerName"),

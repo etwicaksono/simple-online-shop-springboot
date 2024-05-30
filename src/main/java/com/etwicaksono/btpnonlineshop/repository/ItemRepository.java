@@ -22,7 +22,7 @@ public interface ItemRepository extends JpaRepository<ItemEntity, Integer>, JpaS
          @Param("itemsCode") String itemsCode,
          @Param("stock") Integer stock,
          @Param("price") Integer price,
-         @Param("isAvailable") Integer isAvailable,
+         @Param("isAvailable") Boolean isAvailable,
          @Param("lastReStock") LocalDate lastReStock,
          @Param("itemsID") Integer itemsID);
 }

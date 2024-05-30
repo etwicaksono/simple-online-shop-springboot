@@ -24,7 +24,7 @@ public class UpdateItemRequest {
    private Integer price;
 
    @NotNull(message = "{item.isAvailable.required}")
-   private Integer isAvailable;
+   private Boolean isAvailable;
 
    private LocalDate lastReStock;
 }
