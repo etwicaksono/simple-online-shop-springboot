@@ -22,5 +22,5 @@ public class GetListItemRequest {
 
    private String itemName;
    private String itemCode;
-   private String isAvailable;
+   private Boolean isAvailable;
 }

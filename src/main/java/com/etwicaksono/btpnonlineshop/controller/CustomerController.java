@@ -208,7 +208,7 @@ public class CustomerController {
          @Parameter(name = "customerPhone", description = "Customer phone filter of customers list (optional)", required = false) @RequestParam(value = "customerPhone", required = false) String customerPhone,
          @Parameter(name = "isActive", description = "Is active status filter of customers list (optional)", required = false) @RequestParam(value = "isActive", required = false) Boolean isActive) {
 
-      return customerService.getCustomer(GetListCustomerRequest.builder()
+      GetListCustomerRequest request = GetListCustomerRequest.builder()
             .pageNumber(pageNumber)
             .pageSize(pageSize)
             .sortDirection(sortDirection)
@@ -217,7 +217,9 @@ public class CustomerController {
             .customerCode(customerCode)
             .customerPhone(customerPhone)
             .isActive(isActive)
-            .build());
+            .build();
+
+      return customerService.getCustomer(request);
    }
 
 }

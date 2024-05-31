@@ -196,7 +196,7 @@ public class ItemController {
          @Parameter(name = "sortDirection", description = "Sort direction of items list", required = true) @RequestParam("sortDirection") String sortDirection,
          @Parameter(name = "itemName", description = "itemName filter of items list (optional)", required = false) @RequestParam(value = "itemName", required = false) String itemName,
          @Parameter(name = "itemCode", description = "itemCode filter of items list (optional)", required = false) @RequestParam(value = "itemCode", required = false) String itemCode,
-         @Parameter(name = "isAvailable", description = "isAvailable filter of items list (optional)", required = false) @RequestParam(value = "isAvailable", required = false) String isAvailable) {
+         @Parameter(name = "isAvailable", description = "isAvailable filter of items list (optional)", required = false) @RequestParam(value = "isAvailable", required = false) Boolean isAvailable) {
 
       return itemService.getItem(GetListItemRequest.builder()
             .pageNumber(pageNumber)

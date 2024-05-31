@@ -31,9 +31,7 @@ public class ItemSpecification implements Specification<ItemEntity> {
 
       String itemsName = request.getItemName();
       String itemsCode = request.getItemCode();
-      boolean isAvailable = request.getIsAvailable() != null &&
-            !request.getIsAvailable().equals("") &&
-            Integer.parseInt(request.getIsAvailable()) != 0;
+      Boolean isAvailable = request.getIsAvailable();
 
       if (itemsName != null && !itemsName.isEmpty()) {
          Predicate itemsNameFilter = criteriaBuilder.like(root.get("itemsName"),
@@ -47,7 +45,7 @@ public class ItemSpecification implements Specification<ItemEntity> {
          predicates.add(itemsCodeFilter);
       }
 
-      if (isAvailable) {
+      if (isAvailable != null) {
          Predicate isAvailableFilter = criteriaBuilder.equal(root.get("isAvailable"), isAvailable);
          predicates.add(isAvailableFilter);
       }
