@@ -243,6 +243,7 @@ public class CustomerController {
       return customerService.getCustomer(request);
    }
 
+   @Operation(summary = "Customer Report", description = "Print list of customers as pdf file")
    @GetMapping(value = "/report")
    public void customerReport(
          @Parameter(name = "name", description = "Name of customer (optional)", required = false) @RequestParam(value = "name", required = false) String name,
