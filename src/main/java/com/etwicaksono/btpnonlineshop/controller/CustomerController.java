@@ -8,6 +8,7 @@ import com.etwicaksono.btpnonlineshop.dto.customer.CreateCustomerRequest;
 import com.etwicaksono.btpnonlineshop.dto.customer.GetListCustomerRequest;
 import com.etwicaksono.btpnonlineshop.dto.customer.UpdateCustomerRequest;
 import com.etwicaksono.btpnonlineshop.service.CustomerService;
+import com.etwicaksono.btpnonlineshop.service.ReportService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,8 +17,22 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperPrint;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.SQLException;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +48,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 public class CustomerController {
    @Autowired
    private CustomerService customerService;
+
+   @Autowired
+   private HttpServletResponse response;
+
+   @Autowired
+   private ReportService reportService;
 
    /**
     * Create a new customer.
@@ -220,6 +241,40 @@ public class CustomerController {
             .build();
 
       return customerService.getCustomer(request);
+   }
+
+   @GetMapping(value = "/report")
+   public void customerReport(
+         @Parameter(name = "name", description = "Name of customer (optional)", required = false) @RequestParam(value = "name", required = false) String name,
+         @Parameter(name = "address", description = "Address of customer (optional)", required = false) @RequestParam(value = "address", required = false) String address,
+         @Parameter(name = "code", description = "Code of customer (optional)", required = false) @RequestParam(value = "code", required = false) String code,
+         @Parameter(name = "phone", description = "Phone of customer (optional)", required = false) @RequestParam(value = "phone", required = false) String phone,
+         @Parameter(name = "isActive", description = "Is active status filter of customers list (optional)", required = false) @RequestParam(value = "isActive", required = false) Boolean isActive
+
+   ) throws IOException, SQLException, JRException {
+      InputStream customerListReport = new ClassPathResource("report/Customer_List.jasper").getInputStream();
+      Map<String, Object> parameters = new HashMap<>();
+      if (name != null) {
+         parameters.put("name", name.toUpperCase());
+      }
+      if (address != null) {
+         parameters.put("address", address.toUpperCase());
+      }
+      if (code != null) {
+         parameters.put("code", code.toUpperCase());
+      }
+      if (phone != null) {
+         parameters.put("phone", phone.toUpperCase());
+      }
+      if (isActive != null) {
+         parameters.put("isActive", isActive);
+      }
+      JasperPrint jasperPrint = reportService.generateJasperPrint(customerListReport, parameters);
+
+      response.setContentType(MediaType.APPLICATION_PDF.toString());
+      response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
+            String.format("attachment; filename=customer-%s.pdf", Instant.now().toEpochMilli()));
+      JasperExportManager.exportReportToPdfStream(jasperPrint, response.getOutputStream());
    }
 
 }
