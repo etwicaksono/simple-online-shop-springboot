@@ -30,7 +30,7 @@ minio.password=${MINIO_SECRET_KEY}
 minio.bucketName=btpn-online-shop
 
 # Server
-server.address=localhost
+# server.address=localhost
 server.port=8080
 
 # Swagger
