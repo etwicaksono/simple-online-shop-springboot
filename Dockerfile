@@ -13,7 +13,7 @@ COPY src/main/resources/application.properties.docker ./src/main/resources/appli
 RUN mvn clean package -DskipTests
 
 # Use an official OpenJDK runtime as a parent image
-FROM openjdk:17-jdk-slim
+FROM openjdk:23-ea-17-jdk-bullseye
 
 # Set the working directory in the container
 WORKDIR /app
