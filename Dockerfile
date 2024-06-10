@@ -15,6 +15,17 @@ RUN mvn clean package -DskipTests
 # Use an official OpenJDK runtime as a parent image
 FROM openjdk:23-ea-17-jdk-bullseye
 
+# Install necessary packages including Microsoft core fonts
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends fontconfig \
+    && apt-get install -y --no-install-recommends wget cabextract \
+    && wget https://downloads.sourceforge.net/corefonts/arial32.exe \
+    && cabextract -q arial32.exe -d /usr/share/fonts/truetype/msttcorefonts \
+    && fc-cache -f -v \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* arial32.exe
+
+
 # Set the working directory in the container
 WORKDIR /app
 
