@@ -268,7 +268,7 @@ public class CustomerController {
          parameters.put("phone", phone.toUpperCase());
       }
       if (isActive != null) {
-         parameters.put("isActive", isActive);
+         parameters.put("is_active", isActive);
       }
       JasperPrint jasperPrint = reportService.generateJasperPrint(customerListReport, parameters);
 
