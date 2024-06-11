@@ -1,6 +1,7 @@
 package com.etwicaksono.btpnonlineshop.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -34,5 +35,10 @@ public class ErrorController {
       log.error(e.getMessage());
       e.printStackTrace();
       return ResponseUtil.error500Response(e.getMessage());
+   }
+
+   @ExceptionHandler(MissingServletRequestParameterException.class)
+   public ResponseEntity<WebResponse<Object>> handle(MissingServletRequestParameterException e) {
+      return ResponseUtil.error400Response(e.getMessage());
    }
 }
