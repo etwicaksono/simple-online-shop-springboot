@@ -14,10 +14,10 @@ public class CreateItemRequest {
    @NotBlank(message = "{item.code.required}")
    private String code;
 
-   @NotBlank(message = "{item.stock.required}")
+   @NotNull(message = "{item.stock.required}")
    private Integer stock;
 
-   @NotBlank(message = "{item.price.required}")
+   @NotNull(message = "{item.price.required}")
    private Integer price;
 
    @NotNull(message = "{item.isAvailable.required}")

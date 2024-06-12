@@ -137,13 +137,13 @@ public class CustomerServiceImpl implements CustomerService {
 
          if (customerRepository.existsByCustomerCodeAndCustomerIDNot(request.getCode(), customerID)) {
             return ResponseUtil
-                  .errorValidationResponse(String.format("customerID: %s",
+                  .errorValidationResponse(String.format("code: %s",
                         Constants.getMessage(messageSource, Constants.CUSTOMER_CODE_IS_EXIST)));
          }
 
          if (customerRepository.existsByCustomerPhoneAndCustomerIDNot(request.getPhone(), customerID)) {
             return ResponseUtil
-                  .errorValidationResponse(String.format("customerID: %s",
+                  .errorValidationResponse(String.format("phone: %s",
                         Constants.getMessage(messageSource, Constants.CUSTOMER_PHONE_IS_EXIST)));
          }
 

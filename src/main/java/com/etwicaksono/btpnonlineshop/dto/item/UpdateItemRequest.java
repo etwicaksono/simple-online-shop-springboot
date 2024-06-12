@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class UpdateItemRequest {
-   @NotBlank(message = "{itemsID.required}")
+   @NotNull(message = "{itemsID.required}")
    private Integer itemsID;
 
    @NotBlank(message = "{item.name.required}")
@@ -18,10 +18,10 @@ public class UpdateItemRequest {
    @NotBlank(message = "{item.code.required}")
    private String code;
 
-   @NotBlank(message = "{item.stock.required}")
+   @NotNull(message = "{item.stock.required}")
    private Integer stock;
 
-   @NotBlank(message = "{item.price.required}")
+   @NotNull(message = "{item.price.required}")
    private Integer price;
 
    @NotNull(message = "{item.isAvailable.required}")

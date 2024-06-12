@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class UpdateCustomerRequest {
-   @NotBlank(message = "{customerID.required}")
+   @NotNull(message = "{customerID.required}")
    private Integer customerID;
 
    @NotBlank(message = "{customer.name.required}")
