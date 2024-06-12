@@ -1,18 +1,18 @@
 package com.etwicaksono.btpnonlineshop.dto.order;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
 public class CreateOrderRequest {
-   @NotNull(message = "{customerID.required}")
+   @NotBlank(message = "{customerID.required}")
    private Integer customerID;
 
-   @NotNull(message = "{order.itemsID.required}")
+   @NotBlank(message = "{order.itemsID.required}")
    private Integer itemsID;
 
-   @NotNull(message = "{order.quantity.required}")
+   @NotBlank(message = "{order.quantity.required}")
    private Integer quantity;
 }

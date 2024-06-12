@@ -1,5 +1,8 @@
 package com.etwicaksono.btpnonlineshop.utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -34,16 +37,22 @@ public class ResponseUtil {
                   .build());
    }
 
-   /*
-    * Error Response
-    */
    public static ResponseEntity<WebResponse<Object>> errorValidationResponse(String message) {
+      Map<String, String> messageMap = new HashMap<>();
+      String[] splittedMessage = message.split(", ");
+
+      for (String msg : splittedMessage) {
+         String[] splittedMsg = msg.split(": ");
+         messageMap.put(splittedMsg[0], splittedMsg[1]);
+      }
+
       return ResponseEntity
             .badRequest()
             .body(WebResponse.<Object>builder()
                   .statusCode(HttpStatus.BAD_REQUEST.value())
-                  .status("Error Validation")
+                  .status(Constants.ERROR_VALIDATION)
                   .message(message)
+                  .data(messageMap)
                   .build());
    }
 

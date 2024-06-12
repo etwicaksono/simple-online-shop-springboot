@@ -48,7 +48,8 @@ public class ItemServiceImpl implements ItemService {
       try {
          if (itemRepository.existsByItemsCode(request.getCode())) {
             return ResponseUtil
-                  .error400Response(Constants.getMessage(messageSource, Constants.ITEM_CODE_IS_EXIST));
+                  .errorValidationResponse(
+                        String.format("code: %s", Constants.getMessage(messageSource, Constants.ITEM_CODE_IS_EXIST)));
          }
 
          ItemEntity item = ItemEntity.builder()
@@ -91,13 +92,15 @@ public class ItemServiceImpl implements ItemService {
          Integer itemsID = request.getItemsID();
          Optional<ItemEntity> existingItem = itemRepository.findById(itemsID);
          if (!existingItem.isPresent()) {
-            return ResponseUtil.error400Response(Constants.getMessage(messageSource, Constants.ITEMS_ID_INVALID));
+            return ResponseUtil.errorValidationResponse(
+                  String.format("code: %s", Constants.getMessage(messageSource, Constants.ITEMS_ID_INVALID)));
          }
          lastReStock = existingItem.get().getLastRestock();
 
          if (itemRepository.existsByItemsCodeAndItemsIDNot(request.getCode(), itemsID)) {
             return ResponseUtil
-                  .error400Response(Constants.getMessage(messageSource, Constants.ITEM_CODE_IS_EXIST));
+                  .errorValidationResponse(
+                        String.format("code: %s", Constants.getMessage(messageSource, Constants.ITEM_CODE_IS_EXIST)));
          }
 
          if (request.getLastReStock() != null) {

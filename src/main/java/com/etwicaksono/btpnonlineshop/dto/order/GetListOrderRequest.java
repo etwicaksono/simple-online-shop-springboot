@@ -2,7 +2,7 @@ package com.etwicaksono.btpnonlineshop.dto.order;
 
 import java.io.Serializable;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetListOrderRequest implements Serializable {
-   @NotNull(message = "{pageNumber.required}")
+   @NotBlank(message = "{pageNumber.required}")
    private String pageNumber;
 
-   @NotNull(message = "{pageSize.required}")
+   @NotBlank(message = "{pageSize.required}")
    private String pageSize;
 
-   @NotNull(message = "{sortDirection.required}")
+   @NotBlank(message = "{sortDirection.required}")
    private String sortDirection;
 
    private String orderCode;

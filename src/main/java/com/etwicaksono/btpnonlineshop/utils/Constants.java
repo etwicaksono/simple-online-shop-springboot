@@ -56,4 +56,7 @@ public class Constants {
    public static final String PAGE_SIZE_REQUIRED = "pageSize.required";
    public static final String QUANTITY_INVALID = "quantity.invalid";
    public static final String SORT_DIRECTION_REQUIRED = "sortDirection.required";
+
+   // Errors
+   public static final String ERROR_VALIDATION = "VALIDATION ERROR";
 }

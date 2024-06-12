@@ -58,12 +58,15 @@ public class CustomerServiceImpl implements CustomerService {
          String userPic = null;
          if (customerRepository.existsByCustomerCode(request.getCode())) {
             return ResponseUtil
-                  .error400Response(Constants.getMessage(messageSource, Constants.CUSTOMER_CODE_IS_EXIST));
+                  .errorValidationResponse(
+                        String.format("code: %s",
+                              Constants.getMessage(messageSource, Constants.CUSTOMER_CODE_IS_EXIST)));
          }
 
          if (customerRepository.existsByCustomerPhone(request.getPhone())) {
             return ResponseUtil
-                  .error400Response(Constants.getMessage(messageSource, Constants.CUSTOMER_PHONE_IS_EXIST));
+                  .errorValidationResponse(String.format("phone: %s",
+                        Constants.getMessage(messageSource, Constants.CUSTOMER_PHONE_IS_EXIST)));
          }
 
          if (request.getPic() != null && !request.getPic().isEmpty()) {
@@ -126,19 +129,22 @@ public class CustomerServiceImpl implements CustomerService {
          Integer customerID = request.getCustomerID();
          Optional<CustomerEntity> existingCustomer = customerRepository.findById(customerID);
          if (!existingCustomer.isPresent()) {
-            return ResponseUtil.error400Response(Constants.getMessage(messageSource, Constants.CUSTOMER_ID_INVALID));
+            return ResponseUtil.errorValidationResponse(
+                  String.format("customerID: %s", Constants.getMessage(messageSource, Constants.CUSTOMER_ID_INVALID)));
          }
          userPic = existingCustomer.get().getPic();
          lastOrderDate = existingCustomer.get().getLastOrderDate();
 
          if (customerRepository.existsByCustomerCodeAndCustomerIDNot(request.getCode(), customerID)) {
             return ResponseUtil
-                  .error400Response(Constants.getMessage(messageSource, Constants.CUSTOMER_CODE_IS_EXIST));
+                  .errorValidationResponse(String.format("customerID: %s",
+                        Constants.getMessage(messageSource, Constants.CUSTOMER_CODE_IS_EXIST)));
          }
 
          if (customerRepository.existsByCustomerPhoneAndCustomerIDNot(request.getPhone(), customerID)) {
             return ResponseUtil
-                  .error400Response(Constants.getMessage(messageSource, Constants.CUSTOMER_PHONE_IS_EXIST));
+                  .errorValidationResponse(String.format("customerID: %s",
+                        Constants.getMessage(messageSource, Constants.CUSTOMER_PHONE_IS_EXIST)));
          }
 
          if (request.getLastOrderDate() != null) {
@@ -204,7 +210,8 @@ public class CustomerServiceImpl implements CustomerService {
       try {
          Optional<CustomerEntity> existingCustomer = customerRepository.findById(customerID);
          if (!existingCustomer.isPresent()) {
-            return ResponseUtil.error400Response(Constants.getMessage(messageSource, Constants.CUSTOMER_ID_INVALID));
+            return ResponseUtil.errorValidationResponse(
+                  String.format("customerID: %s", Constants.getMessage(messageSource, Constants.CUSTOMER_ID_INVALID)));
          }
 
          CustomerDto result = CustomerDto
@@ -236,7 +243,8 @@ public class CustomerServiceImpl implements CustomerService {
       try {
          Optional<CustomerEntity> existingCustomer = customerRepository.findById(customerID);
          if (!existingCustomer.isPresent()) {
-            return ResponseUtil.error400Response(Constants.getMessage(messageSource, Constants.CUSTOMER_ID_INVALID));
+            return ResponseUtil.errorValidationResponse(
+                  String.format("customerID: %s", Constants.getMessage(messageSource, Constants.CUSTOMER_ID_INVALID)));
          }
 
          // delete file if exist
