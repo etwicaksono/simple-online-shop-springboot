@@ -34,14 +34,14 @@ public class ItemSpecification implements Specification<ItemEntity> {
       Boolean isAvailable = request.getIsAvailable();
 
       if (itemsName != null && !itemsName.isEmpty()) {
-         Predicate itemsNameFilter = criteriaBuilder.like(root.get("itemsName"),
-               String.format("%%%s%%", itemsName));
+         Predicate itemsNameFilter = criteriaBuilder.like(criteriaBuilder.upper(root.get("itemsName")),
+               String.format("%%%s%%", itemsName.toUpperCase()));
          predicates.add(itemsNameFilter);
       }
 
       if (itemsCode != null && !itemsCode.isEmpty()) {
-         Predicate itemsCodeFilter = criteriaBuilder.like(root.get("itemsCode"),
-               String.format("%%%s%%", itemsCode));
+         Predicate itemsCodeFilter = criteriaBuilder.like(criteriaBuilder.upper(root.get("itemsCode")),
+               String.format("%%%s%%", itemsCode.toUpperCase()));
          predicates.add(itemsCodeFilter);
       }
 

@@ -36,26 +36,26 @@ public class CustomerSpecification implements Specification<CustomerEntity> {
       Boolean isActive = request.getIsActive();
 
       if (customerName != null && !customerName.isEmpty()) {
-         Predicate customerNameFilter = criteriaBuilder.like(root.get("customerName"),
-               String.format("%%%s%%", customerName));
+         Predicate customerNameFilter = criteriaBuilder.like(criteriaBuilder.upper(root.get("customerName")),
+               String.format("%%%s%%", customerName.toUpperCase()));
          predicates.add(customerNameFilter);
       }
 
       if (customerAddress != null && !customerAddress.isEmpty()) {
-         Predicate customerAddressFilter = criteriaBuilder.like(root.get("customerAddress"),
-               String.format("%%%s%%", customerAddress));
+         Predicate customerAddressFilter = criteriaBuilder.like(criteriaBuilder.upper(root.get("customerAddress")),
+               String.format("%%%s%%", customerAddress.toUpperCase()));
          predicates.add(customerAddressFilter);
       }
 
       if (customerCode != null && !customerCode.isEmpty()) {
-         Predicate customerCodeFilter = criteriaBuilder.like(root.get("customerCode"),
-               String.format("%%%s%%", customerCode));
+         Predicate customerCodeFilter = criteriaBuilder.like(criteriaBuilder.upper(root.get("customerCode")),
+               String.format("%%%s%%", customerCode.toUpperCase()));
          predicates.add(customerCodeFilter);
       }
 
       if (customerPhone != null && !customerPhone.isEmpty()) {
-         Predicate customerPhoneFilter = criteriaBuilder.like(root.get("customerPhone"),
-               String.format("%%%s%%", customerPhone));
+         Predicate customerPhoneFilter = criteriaBuilder.like(criteriaBuilder.upper(root.get("customerPhone")),
+               String.format("%%%s%%", customerPhone.toUpperCase()));
          predicates.add(customerPhoneFilter);
       }
 

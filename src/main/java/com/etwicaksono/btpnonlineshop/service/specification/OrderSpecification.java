@@ -32,8 +32,8 @@ public class OrderSpecification implements Specification<OrderEntity> {
       String orderCode = request.getOrderCode();
 
       if (orderCode != null && !orderCode.isEmpty()) {
-         Predicate orderCodeFilter = criteriaBuilder.like(root.get("orderCode"),
-               String.format("%%%s%%", orderCode));
+         Predicate orderCodeFilter = criteriaBuilder.like(criteriaBuilder.upper(root.get("orderCode")),
+               String.format("%%%s%%", orderCode.toUpperCase()));
          predicates.add(orderCodeFilter);
       }
 
