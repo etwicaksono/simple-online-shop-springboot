@@ -21,7 +21,7 @@ services:
          minio:
             condition: service_healthy
       networks:
-         - btpn_network
+         - simple_network
 
    db:
       image: postgres
@@ -40,7 +40,7 @@ services:
          timeout: 5s
          retries: 5
       networks:
-         - btpn_network
+         - simple_network
 
    minio:
       image: minio/minio
@@ -59,12 +59,12 @@ services:
          timeout: 10s
          retries: 3
       networks:
-         - btpn_network
+         - simple_network
 
 volumes:
    pgdata:
    miniodata:
 
 networks:
-   btpn_network:
+   simple_network:
       driver: bridge

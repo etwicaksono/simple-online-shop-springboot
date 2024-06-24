@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.etwicaksono</groupId>
-	<artifactId>btpn-online-shop</artifactId>
+	<artifactId>simple-online-shop</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>BTPN Online Shop</name>
-	<description>BTPN Online Shop Back End Apps</description>
+	<name>Simple Online Shop</name>
+	<description>Simple Online Shop Back End Apps</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
